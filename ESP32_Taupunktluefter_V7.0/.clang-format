@@ -1,0 +1,5 @@
+BasedOnStyle: LLVM
+BreakBeforeBraces: Attach
+InsertBraces: true
+IndentWidth: 2
+ColumnLimit: 300

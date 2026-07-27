@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
-// ESP32-TaupunktLüfter 
+// ESP32-TaupunktLüfter
 // mit dem ESP32 Wroom 32
-// für Arduino-ESP32 Release v3.3.8 
+// für Arduino-ESP32 Release v3.3.8
 //
 // Ulrich Schmerold
 // 06/2026
@@ -175,12 +175,11 @@ const ctx=document.getElementById('runtimeChart').getContext('2d');
 )rawliteral";
 //--------------------------------------------------- Ende rawliteral Iindex_html[]----------------------------------------------------------
 
-int groesse_raw_Literal()
-{
- const size_t index_html_size = sizeof(index_html);
-  long Daten_size = Chart_TimeDate.length() + Chart_temp_in.length()+ Chart_air_in.length() + Chart_tp_in.length() + Chart_tp_in.length() + Chart_temp_out.length() + Chart_air_out.length() + Chart_tp_out.length() + Chart_tp_delta.length();
-   Serial.println("* Größe der index_HTML-Seite: " + String(index_html_size)+ "byte"); 
-   Serial.println("* Größe der Datenstrams: " + String(Daten_size)+ "byte"); 
+int groesse_raw_Literal() {
+  const size_t index_html_size = sizeof(index_html);
+  long Daten_size = Chart_TimeDate.length() + Chart_temp_in.length() + Chart_air_in.length() + Chart_tp_in.length() + Chart_tp_in.length() + Chart_temp_out.length() + Chart_air_out.length() + Chart_tp_out.length() + Chart_tp_delta.length();
+  Serial.println("* Größe der index_HTML-Seite: " + String(index_html_size) + "byte");
+  Serial.println("* Größe der Datenstrams: " + String(Daten_size) + "byte");
   return index_html_size;
 }
 
@@ -413,81 +412,208 @@ char Fehler[] PROGMEM = R"rawliteral(
 %Seitenende%
 )rawliteral";
 
+String processor(const String &var) {
+  static unsigned int LDZ; // Länge der Datenreihe Datum/Zeit
+  static unsigned int L;   // Länge einer Datenreihe
+  Watchdog_reset();
 
-String processor(const String& var)
-{ 
- static unsigned int LDZ; //Länge der Datenreihe Datum/Zeit
- static unsigned int L; //Länge einer Datenreihe
- Watchdog_reset(); 
+  String f;
 
- String f;
+  //-----------------------------------------  Variablen für die Tabelle in den HTML-Code einfügen
+  if (var == "Version") {
+    return Software_version;
+  }
+  if (var == "T1") {
+    return String(t1);
+  }
+  if (var == "T2") {
+    return String(t2);
+  }
+  if (var == "H1") {
+    return String(h1);
+  }
+  if (var == "H2") {
+    return String(h2);
+  }
+  if (var == "TP1") {
+    return String(Taupunkt_1);
+  }
+  if (var == "TP2") {
+    return String(Taupunkt_2);
+  }
+  if (var == "DeltaTP") {
+    return String(DeltaTP);
+  }
+  if (var == "Stamp") {
+    return make_time_stamp();
+  }
 
- //-----------------------------------------  Variablen für die Tabelle in den HTML-Code einfügen  
-   if(var == "Version") return Software_version;
-   if(var == "T1")      return String(t1);
-   if(var == "T2")      return String(t2);
-   if(var == "H1")      return String(h1);
-   if(var == "H2")      return String(h2);
-   if(var == "TP1")     return String(Taupunkt_1);
-   if(var == "TP2")     return String(Taupunkt_2);
-   if(var == "DeltaTP") return String(DeltaTP);
-   if(var == "Stamp")   return make_time_stamp();
-   
-   if(var == "Color-1")      if(rel == true) return "#009231"; else return "#364592";
-   if(var == "Rel")          if(rel == true) return "L&uumlfter ist in Betrieb"; else return "L&uumlfter ist nicht in Betrieb";
-   if(var == "Color-Radon") if(Radonsignal == true) return "red"; else return "green";
-   if(var == "Radon")       if(Radonsignal == true) return "! Radonkonzentration zu hoch !"; else return "Radonkonzentration okay &#10004";
-   if(var == "Radonfeld")   if(Radonfunktionalitaet == true)return Radon_Taste; else return"";
-   //-------------------------------------------- Sicherstellen, dass gerade keine Routine auf die Chronik-Daten zugreift -----
-   if (chronik_is_busy)
-   {
+  if (var == "Color-1") {
+    if (rel == true) {
+      return "#009231";
+    } else {
+      return "#364592";
+    }
+  }
+  if (var == "Rel") {
+    if (rel == true) {
+      return "L&uumlfter ist in Betrieb";
+    } else {
+      return "L&uumlfter ist nicht in Betrieb";
+    }
+  }
+  if (var == "Color-Radon") {
+    if (Radonsignal == true) {
+      return "red";
+    } else {
+      return "green";
+    }
+  }
+  if (var == "Radon") {
+    if (Radonsignal == true) {
+      return "! Radonkonzentration zu hoch !";
+    } else {
+      return "Radonkonzentration okay &#10004";
+    }
+  }
+  if (var == "Radonfeld") {
+    if (Radonfunktionalitaet == true) {
+      return Radon_Taste;
+    } else {
+      return "";
+    }
+  }
+  //-------------------------------------------- Sicherstellen, dass gerade keine Routine auf die Chronik-Daten zugreift -----
+  if (chronik_is_busy) {
     Serial_Debugging_println("chronik_is_busy");
-    HTML_processor_is_working = false; 
+    HTML_processor_is_working = false;
     return " ";
-   }
+  }
 
-   //--------------------------------------------------------------- Chronik Datensätze in den HTML-Code einfügen -------------
-   if (use_Charts == false) return "";
-   else {
-        if(var == "Chart_TimeDate") return Chart_TimeDate;
-        if(var == "Chart_temp_in")  { f = Chart_temp_in;  f.replace(" ",""); return f; }
-        if(var == "Chart_temp_out") { f = Chart_temp_out; f.replace(" ",""); return f; }   
-        if(var == "Chart_air_in")   { f = Chart_air_in;   f.replace(" ",""); return f; } 
-        if(var == "Chart_air_out")  { f = Chart_air_out;  f.replace(" ",""); return f; } 
-        if(var == "Chart_tp_in")    { f = Chart_tp_in;    f.replace(" ",""); return f; }
-        if(var == "Chart_tp_out")   { f = Chart_tp_out;   f.replace(" ",""); return f; }
-        if(var == "Chart_tp_delta") { f = Chart_tp_delta; f.replace(" ",""); return f; }
-        if(var == "Chart_Luefter")  { f = Chart_lz;       f.replace(" ",""); return f; }
-        if(var == "Chart_LuefterR") { f = Chart_lzR;      f.replace(" ",""); return f; }
-
-
-        if(var == "Chart_Anzahl_Werte_Date") {LDZ =(Chart_TimeDate.length()+1);   return String( LDZ / Chart_TimeDate_length);}
-        if(var == "Chart_Anzahl_Werte_ti")   {L =  (Chart_temp_in.length()+1);    return String( L / laenge_Datensatz);}
-        if(var == "Chart_Anzahl_Werte_ta")   {L =  (Chart_temp_out.length()+1);   return String( L / laenge_Datensatz);}
-        if(var == "Chart_Anzahl_Werte_hi")   {L =  (Chart_air_in.length()+1);     return String( L / laenge_Datensatz);}
-        if(var == "Chart_Anzahl_Werte_ha")   {L =  (Chart_air_out.length()+1);    return String( L / laenge_Datensatz);}
-        if(var == "Chart_Anzahl_Werte_tpi")  {L =  (Chart_tp_in.length()+1);      return String( L / laenge_Datensatz);}
-        if(var == "Chart_Anzahl_Werte_tpa")  {L =  (Chart_tp_out.length()+1);     return String( L / laenge_Datensatz);}
-        if(var == "Chart_Anzahl_Werte_tpd")  {L =  (Chart_tp_delta.length()+1);   return String( L / laenge_Datensatz);}
-        if(var == "Chart_Anzahl_Werte_lz")   {L =  (Chart_lz.length()+1);         return String( L / laenge_Datensatz);}
-        if(var == "Chart_Anzahl_Werte_lzR")  {L =  (Chart_lzR.length()+1);        return String( L / laenge_Datensatz);}
-        if(var == "L") return String(L);
-        if(var == "LDZ") return String(LDZ);
-        if(var == "Grenze_aus") return String(SCHALTmin,1) ;
-        if(var == "Grenze_ein") return String((SCHALTmin + HYSTERESE),1) ;
-      };
-  //------------------------------------------------------------------------------------------------------------------------------
-   if(var == "Optionen_String") return OptionenString;
-   if(var == "SpeicherString") return ("========= Speicher  =========<br>" + SpeicherString + "<br>==========  WIFI ===========<br>" + WIFI_Status_String);
-   if(var == "Fehler") return FehlerString;
- //------------------------------------------------------------------------------------------------------------------------------
-   if(var == "Seitenende"){ HTML_processor_is_working = false; 
-                       Serial_Debugging_println("HTML_processor ist fertig!"); 
-                      TONE (800, 200);
-                       return "";
-                    };
+  //--------------------------------------------------------------- Chronik Datensätze in den HTML-Code einfügen -------------
+  if (use_Charts == false) {
     return "";
-}
+  } else {
+    if (var == "Chart_TimeDate") {
+      return Chart_TimeDate;
+    }
+    if (var == "Chart_temp_in") {
+      f = Chart_temp_in;
+      f.replace(" ", "");
+      return f;
+    }
+    if (var == "Chart_temp_out") {
+      f = Chart_temp_out;
+      f.replace(" ", "");
+      return f;
+    }
+    if (var == "Chart_air_in") {
+      f = Chart_air_in;
+      f.replace(" ", "");
+      return f;
+    }
+    if (var == "Chart_air_out") {
+      f = Chart_air_out;
+      f.replace(" ", "");
+      return f;
+    }
+    if (var == "Chart_tp_in") {
+      f = Chart_tp_in;
+      f.replace(" ", "");
+      return f;
+    }
+    if (var == "Chart_tp_out") {
+      f = Chart_tp_out;
+      f.replace(" ", "");
+      return f;
+    }
+    if (var == "Chart_tp_delta") {
+      f = Chart_tp_delta;
+      f.replace(" ", "");
+      return f;
+    }
+    if (var == "Chart_Luefter") {
+      f = Chart_lz;
+      f.replace(" ", "");
+      return f;
+    }
+    if (var == "Chart_LuefterR") {
+      f = Chart_lzR;
+      f.replace(" ", "");
+      return f;
+    }
 
+    if (var == "Chart_Anzahl_Werte_Date") {
+      LDZ = (Chart_TimeDate.length() + 1);
+      return String(LDZ / Chart_TimeDate_length);
+    }
+    if (var == "Chart_Anzahl_Werte_ti") {
+      L = (Chart_temp_in.length() + 1);
+      return String(L / laenge_Datensatz);
+    }
+    if (var == "Chart_Anzahl_Werte_ta") {
+      L = (Chart_temp_out.length() + 1);
+      return String(L / laenge_Datensatz);
+    }
+    if (var == "Chart_Anzahl_Werte_hi") {
+      L = (Chart_air_in.length() + 1);
+      return String(L / laenge_Datensatz);
+    }
+    if (var == "Chart_Anzahl_Werte_ha") {
+      L = (Chart_air_out.length() + 1);
+      return String(L / laenge_Datensatz);
+    }
+    if (var == "Chart_Anzahl_Werte_tpi") {
+      L = (Chart_tp_in.length() + 1);
+      return String(L / laenge_Datensatz);
+    }
+    if (var == "Chart_Anzahl_Werte_tpa") {
+      L = (Chart_tp_out.length() + 1);
+      return String(L / laenge_Datensatz);
+    }
+    if (var == "Chart_Anzahl_Werte_tpd") {
+      L = (Chart_tp_delta.length() + 1);
+      return String(L / laenge_Datensatz);
+    }
+    if (var == "Chart_Anzahl_Werte_lz") {
+      L = (Chart_lz.length() + 1);
+      return String(L / laenge_Datensatz);
+    }
+    if (var == "Chart_Anzahl_Werte_lzR") {
+      L = (Chart_lzR.length() + 1);
+      return String(L / laenge_Datensatz);
+    }
+    if (var == "L") {
+      return String(L);
+    }
+    if (var == "LDZ") {
+      return String(LDZ);
+    }
+    if (var == "Grenze_aus") {
+      return String(SCHALTmin, 1);
+    }
+    if (var == "Grenze_ein") {
+      return String((SCHALTmin + HYSTERESE), 1);
+    }
+  };
+  //------------------------------------------------------------------------------------------------------------------------------
+  if (var == "Optionen_String") {
+    return OptionenString;
+  }
+  if (var == "SpeicherString") {
+    return ("========= Speicher  =========<br>" + SpeicherString + "<br>==========  WIFI ===========<br>" + WIFI_Status_String);
+  }
+  if (var == "Fehler") {
+    return FehlerString;
+  }
+  //------------------------------------------------------------------------------------------------------------------------------
+  if (var == "Seitenende") {
+    HTML_processor_is_working = false;
+    Serial_Debugging_println("HTML_processor ist fertig!");
+    TONE(800, 200);
+    return "";
+  };
+  return "";
+}
 
 //----------------------------------------------------------------------------------------------------------------------------------

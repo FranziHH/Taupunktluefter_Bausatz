@@ -16,8 +16,7 @@ const char *time_zone = "CET-1CEST,M3.5.0,M10.5.0/3"; // TimeZone rule for Europ
 
 void notFound(AsyncWebServerRequest *request) { request->send(404, "text/plain", "Not found"); }
 
-unsigned long get_Local_Time()
-{
+unsigned long get_Local_Time() {
   struct tm timeinfo;
   int n = 0;
   bool erfolg = true;
@@ -28,24 +27,20 @@ unsigned long get_Local_Time()
   OLED_setCursor(6, 0);
   Serial_Debugging_println("Suche Internetzeit");
 
-  while ((n < 10) and (!getLocalTime(&timeinfo)))
-  {
+  while ((n < 10) and (!getLocalTime(&timeinfo))) {
     n++;
     OLED_print("X");
     OLED_update();
     Serial_Debugging_print("X");
     delay(500);
   }
-  
-  if (n > 9)
-  {
+
+  if (n > 9) {
     OLED_println("Keine Zeit ermittelt", 7, 0);
     Serial_Debugging_println("Keine Zeit ermittelt");
     Fehler_speichern(300);
     erfolg = false;
-  }
-  else
-  {
+  } else {
     rtc.setTimeStruct(timeinfo);
     make_time_stamp();
     OLED_Zeile_loeschen(6);
@@ -53,21 +48,20 @@ unsigned long get_Local_Time()
     Serial_Debugging_println(stamp);
   }
   delay(delay_interval_3);
-  if (erfolg)
+  if (erfolg) {
     return rtc.getEpoch();
-  else
+  } else {
     return 0;
+  }
 }
 
-String make_time_stamp()
-{
+String make_time_stamp() {
   stamp = rtc.getTime("%d.%m.%y %H:%M");
   // stamp = rtc.getTime("%d.%m.%Y %H:%M:%S");
   return stamp;
 }
 
-void WIFI_Connect()
-{
+void WIFI_Connect() {
   OLED_clear();
   OLED_println("WIFI-1", 0, 7);
   OLED_println("Verbinde: ", 2, 0);
@@ -77,13 +71,12 @@ void WIFI_Connect()
 
   WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE, INADDR_NONE);
   WiFi.setHostname(Hostname);
-  if (DHCP == false)
-  {
+  if (DHCP == false) {
     Serial.println("DHCP = false");
     WiFi.config(local_IP, gateway, subnet, dns1, dns2);
-  }
-  else
+  } else {
     Serial.println("DHCP = true");
+  }
 
   WiFi.onEvent(WiFiEvent);
   WiFi.mode(WIFI_STA);
@@ -93,8 +86,7 @@ void WIFI_Connect()
   OLED_setCursor(3, 0);
   //--------------------------------------------------   Verbindungsversuche ins Netz-----------------------------------------------
   byte n = 0;
-  while ((WiFi.status() != WL_CONNECTED) and (n < 14))
-  {
+  while ((WiFi.status() != WL_CONNECTED) and (n < 14)) {
     n++;
     OLED_setCursor(4, n - 1);
     drawSonderzeichen(4, false);
@@ -115,140 +107,146 @@ void WIFI_Connect()
     Serial_Debugging_println("Server Starten");
     WiFi.onEvent(WiFiEvent);
     //------------------------------------- HTML Taupunktlüfter Seite -------------------------
-    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
-              { 
-        TONE (800, 300);
-        Serial.print("Received request from client with IP: ");
-        Serial.println(request->client()->remoteIP());
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
+      TONE(800, 300);
+      Serial.print("Received request from client with IP: ");
+      Serial.println(request->client()->remoteIP());
 
-       HTML_processor_is_working = true;
-       Serial_Debugging_println("index_html wird angefordert");
-       
-        delay(1);  // um den Watchdog zurückzusetzen     
-        request->send(200, "text/html", index_html, processor); });
+      HTML_processor_is_working = true;
+      Serial_Debugging_println("index_html wird angefordert");
+
+      delay(1); // um den Watchdog zurückzusetzen
+      request->send(200, "text/html", index_html, processor);
+    });
     //---------------------------------------------- Daten ------------------------------------------------
-    server.on("/Daten", HTTP_GET, [](AsyncWebServerRequest *request)
-              { 
-        TONE (800, 300);
-        Serial.print("Received request from client with IP: ");
-        Serial.println(request->client()->remoteIP());
+    server.on("/Daten", HTTP_GET, [](AsyncWebServerRequest *request) {
+      TONE(800, 300);
+      Serial.print("Received request from client with IP: ");
+      Serial.println(request->client()->remoteIP());
 
-       HTML_processor_is_working = true;
-       Serial_Debugging_println("/Daten/ werden angefordert");
-       
-        delay(1);  // um den Watchdog zurückzusetzen       
-        request->send(200, "text/html", Daten, processor); });
+      HTML_processor_is_working = true;
+      Serial_Debugging_println("/Daten/ werden angefordert");
+
+      delay(1); // um den Watchdog zurückzusetzen
+      request->send(200, "text/html", Daten, processor);
+    });
     //---------------------------------------------- Optionen ------------------------------------------------
-    server.on("/Optionen", HTTP_GET, [](AsyncWebServerRequest *request)
-              { 
-        Optionen_to_String();
-        TONE (800, 300);
-        Serial.print("Received request from client with IP: ");
-        Serial.println(request->client()->remoteIP());
+    server.on("/Optionen", HTTP_GET, [](AsyncWebServerRequest *request) {
+      Optionen_to_String();
+      TONE(800, 300);
+      Serial.print("Received request from client with IP: ");
+      Serial.println(request->client()->remoteIP());
 
-       HTML_processor_is_working = true;
-       Serial_Debugging_println("/Optionen/ werden angefordert");
-       
-        delay(1);  // um den Watchdog zurückzusetzen       
-        request->send(200, "text/html", Optionen, processor); });
+      HTML_processor_is_working = true;
+      Serial_Debugging_println("/Optionen/ werden angefordert");
+
+      delay(1); // um den Watchdog zurückzusetzen
+      request->send(200, "text/html", Optionen, processor);
+    });
     //---------------------------------------------- Speicher------------------------------------------------
-    server.on("/Speicher", HTTP_GET, [](AsyncWebServerRequest *request)
-              { 
-        SpeicherGroessen();
-        Make_WIFI_Status_String();
-        TONE (800, 300);
-        Serial.print("Received request from client with IP: ");
-        Serial.println(request->client()->remoteIP());
+    server.on("/Speicher", HTTP_GET, [](AsyncWebServerRequest *request) {
+      SpeicherGroessen();
+      Make_WIFI_Status_String();
+      TONE(800, 300);
+      Serial.print("Received request from client with IP: ");
+      Serial.println(request->client()->remoteIP());
 
-       HTML_processor_is_working = true;
-       Serial_Debugging_println("/Speicher/ wird angefordert");
-       
-        delay(1);  // um den Watchdog zurückzusetzen       
-        request->send(200, "text/html", Speicher, processor); });
+      HTML_processor_is_working = true;
+      Serial_Debugging_println("/Speicher/ wird angefordert");
+
+      delay(1); // um den Watchdog zurückzusetzen
+      request->send(200, "text/html", Speicher, processor);
+    });
 
     //---------------------------------------------- Daten als Datei------------------------------------------------
-    server.on("/Datendatei.txt", HTTP_GET, [](AsyncWebServerRequest *request)
-              { 
-        TONE (800, 300);
-        Serial.print("Received request from client with IP: ");
-        Serial.println(request->client()->remoteIP());
+    server.on("/Datendatei.txt", HTTP_GET, [](AsyncWebServerRequest *request) {
+      TONE(800, 300);
+      Serial.print("Received request from client with IP: ");
+      Serial.println(request->client()->remoteIP());
 
-       HTML_processor_is_working = true;
-       Serial_Debugging_println("/Daten_Datei/ wird angefordert");
-       
-        delay(1);  // um den Watchdog zurückzusetzen       
-        request->send(200, "multipart/form-data", Daten_Datei, processor); });
+      HTML_processor_is_working = true;
+      Serial_Debugging_println("/Daten_Datei/ wird angefordert");
+
+      delay(1); // um den Watchdog zurückzusetzen
+      request->send(200, "multipart/form-data", Daten_Datei, processor);
+    });
     //---------------------------------------------- Fehler------------------------------------------------
-    server.on("/Fehler", HTTP_GET, [](AsyncWebServerRequest *request)
-              { 
-        read_Fehler_from_FS();
-        TONE (800, 300);
-        Serial.print("Received request from client with IP: ");
-        Serial.println(request->client()->remoteIP());
+    server.on("/Fehler", HTTP_GET, [](AsyncWebServerRequest *request) {
+      read_Fehler_from_FS();
+      TONE(800, 300);
+      Serial.print("Received request from client with IP: ");
+      Serial.println(request->client()->remoteIP());
 
-       HTML_processor_is_working = true;
-       Serial_Debugging_println("/Fehler/ wird angefordert");
-       
-        delay(1);  // um den Watchdog zurückzusetzen       
-        request->send(200, "text/html", Fehler, processor); });
+      HTML_processor_is_working = true;
+      Serial_Debugging_println("/Fehler/ wird angefordert");
+
+      delay(1); // um den Watchdog zurückzusetzen
+      request->send(200, "text/html", Fehler, processor);
+    });
     // ------------------------------------------------------------  ESP Restart ---------------------------------
-    server.on("/restart", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-  request->send(200, "text/plain", "ESP startet neu...");  
-    TONE (1000, 1000);
-  DefaultHeaders::Instance().addHeader("Connection", "close");
-    // Kleiner Trick: Den Restart um 2 Sekunden verzögern
-  xTaskCreate([](void*){vTaskDelay(pdMS_TO_TICKS(2000)); ESP.restart();}, "restart_task", 1000, NULL, 1, NULL);
-  TONE (400, 1000); });
+    server.on("/restart", HTTP_GET, [](AsyncWebServerRequest *request) {
+      request->send(200, "text/plain", "ESP startet neu...");
+      TONE(1000, 1000);
+      DefaultHeaders::Instance().addHeader("Connection", "close");
+      // Kleiner Trick: Den Restart um 2 Sekunden verzögern
+      xTaskCreate(
+          [](void *) {
+            vTaskDelay(pdMS_TO_TICKS(2000));
+            ESP.restart();
+          },
+          "restart_task", 1000, NULL, 1, NULL);
+      TONE(400, 1000);
+    });
     //--------------------------------------- Fehlerprotokoll löschen ---------------------------------------------
-    server.on("/clearlog", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-  File f = LittleFS.open("/Fehler.txt", "w");
-  if (f) {
-    f.println("--- Protokoll gelöscht ---");
-    f.close();
-    request->send(200, "text/plain", "Protokoll wurde geleert.");
-  } else {
-    request->send(500, "text/plain", "Fehler beim Loeschen!");
-  } });
+    server.on("/clearlog", HTTP_GET, [](AsyncWebServerRequest *request) {
+      File f = LittleFS.open("/Fehler.txt", "w");
+      if (f) {
+        f.println("--- Protokoll gelöscht ---");
+        f.close();
+        request->send(200, "text/plain", "Protokoll wurde geleert.");
+      } else {
+        request->send(500, "text/plain", "Fehler beim Loeschen!");
+      }
+    });
     //----------------------------------------------------------------------------Daten löschen -----------------------------------
-    server.on("/cleardata", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
- Datenstreams_leeren();
- request->send(200, "text/plain", "Löschen gestartet");
- format_LittleFS_kurz();
- if (Datenspeicher > 0){load_Chronik_from_LittleFS();}
-  TONE(1000, 1000); });
+    server.on("/cleardata", HTTP_GET, [](AsyncWebServerRequest *request) {
+      Datenstreams_leeren();
+      request->send(200, "text/plain", "Löschen gestartet");
+      format_LittleFS_kurz();
+      if (Datenspeicher > 0) {
+        load_Chronik_from_LittleFS();
+      }
+      TONE(1000, 1000);
+    });
     //--------------------------------------------------------------------------Preferences löschen -------------------------------
-    server.on("/clearPrefs", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
- Optionen_loeschen(); 
- TONE(1000, 200);
-  request->send(200, "text/plain", "OK"); });
+    server.on("/clearPrefs", HTTP_GET, [](AsyncWebServerRequest *request) {
+      Optionen_loeschen();
+      TONE(1000, 200);
+      request->send(200, "text/plain", "OK");
+    });
     //-----------------------------------------------JSON endpoint for temperature and humidity data -------------------------------
-    server.on("/json", HTTP_GET, [](AsyncWebServerRequest *request)
-              {
-  String json = "{";
-  json += "\"temp_in\":" + String(t1) + ",";
-  json += "\"temp_out\":" + String(t2) + ",";
-  json += "\"humidity_in\":" + String(h1) + ",";
-  json += "\"humidity_out\":" + String(h2) + ",";
-  json += "\"dewpoint_in\":" + String(Taupunkt_1) + ",";
-  json += "\"dewpoint_out\":" + String(Taupunkt_2) + ",";
-  json += "\"dewpoint_delta\":" + String(DeltaTP) + ",";
-  json += "\"fan\":" + String(rel ? "true" : "false");
-  json += "}";
+    server.on("/json", HTTP_GET, [](AsyncWebServerRequest *request) {
+      String json = "{";
+      json += "\"temp_in\":" + String(t1) + ",";
+      json += "\"temp_out\":" + String(t2) + ",";
+      json += "\"humidity_in\":" + String(h1) + ",";
+      json += "\"humidity_out\":" + String(h2) + ",";
+      json += "\"dewpoint_in\":" + String(Taupunkt_1) + ",";
+      json += "\"dewpoint_out\":" + String(Taupunkt_2) + ",";
+      json += "\"dewpoint_delta\":" + String(DeltaTP) + ",";
+      json += "\"fan\":" + String(rel ? "true" : "false");
+      json += "}";
 
-  request->send(200, "application/json", json); });
+      request->send(200, "application/json", json);
+    });
     //--------------------------------------------------------------------------------------------------------------------------------
 
     server.onNotFound(notFound);
     server.begin();
-    if (debugging)
+    if (debugging) {
       SerialprintWifiStatus();
-  }
-  else
-  { //------------------------------------------------ WIFI ist nicht verbunden ---------------------------------------------
+    }
+  } else { //------------------------------------------------ WIFI ist nicht verbunden ---------------------------------------------
     OLED_println("nicht verbunden!", 4, 0);
     Serial_Debugging_println("WIFI ist nicht verbunden");
     Fehler_speichern(301);
@@ -260,21 +258,17 @@ void WIFI_Connect()
 }
 //-------------------------------------------------------------------------------------------------------------------------------------
 
-void WIFI_watch_Task()
-{
+void WIFI_watch_Task() {
 
-  if (millis() - Start_Millis > interval_reconnect)
-  {
+  if (millis() - Start_Millis > interval_reconnect) {
     Start_Millis = millis(); // Zähler zurücksetzen
     own_WIFI_reconnect();
   }
 }
 //-------------------------------------------------------------------------------------------------------------------------------------
 
-void own_WIFI_reconnect()
-{
-  if (WiFi.status() != WL_CONNECTED)
-  {
+void own_WIFI_reconnect() {
+  if (WiFi.status() != WL_CONNECTED) {
     WiFi.disconnect();
     Serial.println("WIFI ist unterbrochen! Versuche neu zu verbinden");
     OLED_clear();
@@ -282,21 +276,20 @@ void own_WIFI_reconnect()
     OLED_println("Versuche zu verbinden", 1, 0);
     Serial_Debugging_print("Verbindungsversuch: ");
     byte n = 0;
-    while ((WiFi.status() != WL_CONNECTED) and (n < 10))
-    {
+    while ((WiFi.status() != WL_CONNECTED) and (n < 10)) {
       n++;
       Serial_Debugging_print(String(n) + "-");
       OLED_println("Versuch " + String(n), 3, 0);
       OLED_update();
-      if (DHCP == false)
+      if (DHCP == false) {
         WiFi.config(local_IP, gateway, subnet, dns1, dns2);
+      }
       // WiFi.config(local_IP, gateway, subnet, dns1, dns2 ) ;
       WiFi.begin(ssid, password);
       delay(1000);
     }
     Serial_Debugging_println("");
-    if (n > 9)
-    {
+    if (n > 9) {
       OLED_println("Leider kein Erfolg!", 4, 0);
       OLED_println("ESP32 Neustart.....", 6, 0);
       Fehler_speichern(302);

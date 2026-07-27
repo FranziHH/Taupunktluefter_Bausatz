@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// ESP32-TaupunktLüfter 
+// ESP32-TaupunktLüfter
 // mit dem ESP32 Wroom 32
 // für Arduino-ESP32 Release v3.3.8
 // --------------------------------
@@ -10,16 +10,16 @@
 //
 // Franziska Walter
 // 07/2026
-// 
+//
 // bei Nutzung der ArduinoIDE:
 // den Ordner %USERPROFILE%\Documents\Arduino\libraries sichern und komplett entleeren
 // nur die unten angegebenen Libraries installieren!
-// 
+//
 // Aktuell, am 26.07.2026 können alle Boards und Bibliotheken auf den aktuellen Stand aktualsisiert werden
 //
-// Board: 
+// Board:
 //    Arduino-ESP32 Release v3.3.11
-// 
+//
 // Libraries:
 //	  adafruit/DHT sensor library@^1.4.7
 //	  fbiego/ESP32Time@^2.0.6
@@ -31,84 +31,84 @@
 //////////////////////////////////////////////////////////////////////////////
 
 String Software_version = "7.0.1";
-#define Hostname     "TPL-V7.0"
+#define Hostname "TPL-V7.0"
 // #define use_OLED true
 
 // Dieser Code benötig zwingend die folgenden Libraries:
-#include <string.h>
-#include <DHT.h>                // adafruit/DHT sensor library@^1.4.7
-#include <time.h>
-#include <ESP32Time.h>          // fbiego/ESP32Time@^2.0.6
-#include <WiFi.h>
-#include <AsyncTCP.h>           // esp32async/AsyncTCP@^3.5.0
-#include <ESPAsyncWebServer.h>  // esp32async/ESPAsyncWebServer@^3.12.0     // Version 3.7.10 !!!!!! Siehe: https://docs.arduino.cc/libraries/esp-async-webserver/#Releases
-#include <Wire.h>
-#include <GyverOLED.h>          // gyverlibs/GyverOLED@^1.6.4
-#include <esp_task_wdt.h>
-#include <StreamString.h>
 #include "LittleFS.h"
-                                // mathertel/RotaryEncoder@^1.6.0
-                                
+#include <AsyncTCP.h>          // esp32async/AsyncTCP@^3.5.0
+#include <DHT.h>               // adafruit/DHT sensor library@^1.4.7
+#include <ESP32Time.h>         // fbiego/ESP32Time@^2.0.6
+#include <ESPAsyncWebServer.h> // esp32async/ESPAsyncWebServer@^3.12.0     // Version 3.7.10 !!!!!! Siehe: https://docs.arduino.cc/libraries/esp-async-webserver/#Releases
+#include <GyverOLED.h>         // gyverlibs/GyverOLED@^1.6.4
+#include <StreamString.h>
+#include <WiFi.h>
+#include <Wire.h>
+#include <esp_task_wdt.h>
+#include <string.h>
+#include <time.h>
+// mathertel/RotaryEncoder@^1.6.0
+
 /* Code für config.h umstrukturiert */
-#define laenge_Zeichenfolge 36    //35 Zeichen und /0
+#define laenge_Zeichenfolge 36 // 35 Zeichen und /0
 
 typedef struct {
- char Bezeichnung[16];
- byte Menue;
- char Type;       // B = bool, F = float, S = String, M = Menü
-char Zeichenfolge[laenge_Zeichenfolge]; 
-}param;
+  char Bezeichnung[16];
+  byte Menue;
+  char Type; // B = bool, F = float, S = String, M = Menü
+  char Zeichenfolge[laenge_Zeichenfolge];
+} param;
 
 #if __has_include("config.h")
-    #include "config.h"
+#include "config.h"
 #else
-    #error "ERROR: 'config.h' is missing! Please copy 'config.h.example' to 'config.h' and enter your data."
+#error "ERROR: 'config.h' is missing! Please copy 'config.h.example' to 'config.h' and enter your data."
 #endif
 /* Code für config.h umstrukturiert */
 
 GyverOLED<OLED_TYPE> oled(I2C_ADDR);
 static AsyncWebServer server(80);
 
-ESP32Time rtc;  
-String stamp;  // Variable für den Zeitstempel.
+ESP32Time rtc;
+String stamp; // Variable für den Zeitstempel.
 
 //************************************** WIFI ***************************************************************
 // #define laenge_Zeichenfolge 36    //35 Zeichen und /0
 bool DHCP = true;
-char ssid [laenge_Zeichenfolge]; 
-char password [laenge_Zeichenfolge]; 
+char ssid[laenge_Zeichenfolge];
+char password[laenge_Zeichenfolge];
 
-IPAddress local_IP(192, 168, 178, 140);       // Diese IP-Adrese bekommt der Taupunkt-Lüfter
-IPAddress gateway (192, 168, 178, 1);         // Gateway ins Internet
-IPAddress subnet  (255, 255, 255, 0);         // Subnet-Mask
-IPAddress dns1    (192, 168, 178, 1);         // eigener DNS-Server
-IPAddress dns2    (  8,   8,   8, 8);         // DNS-Server von Google
+IPAddress local_IP(192, 168, 178, 140); // Diese IP-Adrese bekommt der Taupunkt-Lüfter
+IPAddress gateway(192, 168, 178, 1);    // Gateway ins Internet
+IPAddress subnet(255, 255, 255, 0);     // Subnet-Mask
+IPAddress dns1(192, 168, 178, 1);       // eigener DNS-Server
+IPAddress dns2(8, 8, 8, 8);             // DNS-Server von Google
 
 //************************************* Prototyping (geordet nach Karteireiter  *******************************
 //------------------------ Chronik -----------------------
 void Datenstreams_leeren();
 bool load_Chronik_from_LittleFS();
 String load_Datensatz(String name);
-bool chronic_update (String , float);
+bool chronic_update(String, float);
 bool format_LittleFS();
 bool format_LittleFS_kurz();
-bool remove_LittleFS(String name) ;
+bool remove_LittleFS(String name);
 bool write_LittleFS(String name, String daten);
 void daten_serial_ausgeben();
 bool chronik_update_all();
 unsigned int LittleFS_print_space();
-bool test_TimeDate(); //--------------------------------------- Datum und Zeit  speichern für chart labels
-bool test_temp_in(); //--------------------------------------- Innentemperatur abspeichern 
-bool test_temp_Out(); //--------------------------------------- Außentemperatur abspeichern 
-bool test_air_in(); //--------------------------------------- Innen-Luftfeuchte abspeichern 
-bool test_air_out(); //--------------------------------------- Außen-Luftfeuchte abspeichern 
-bool test_delta_TP(); //-------------------------------------- Unterschied der Taupunkte
+bool test_TimeDate();   //--------------------------------------- Datum und Zeit  speichern für chart labels
+bool test_temp_in();    //--------------------------------------- Innentemperatur abspeichern
+bool test_temp_Out();   //--------------------------------------- Außentemperatur abspeichern
+bool test_air_in();     //--------------------------------------- Innen-Luftfeuchte abspeichern
+bool test_air_out();    //--------------------------------------- Außen-Luftfeuchte abspeichern
+bool test_delta_TP();   //-------------------------------------- Unterschied der Taupunkte
 bool test_Taupunkt_1(); //--------------------------------------- Taupunkt 1
 bool test_Taupunkt_2(); //--------------------------------------- Taupunkt 2
 bool test_lz();         //------------------------------------ Lüfter_Laufzeit
-bool test_lzR();         //------------------------------------ Radon Lüfter_Laufzeit
+bool test_lzR();        //------------------------------------ Radon Lüfter_Laufzeit
 //------------------------ Debugging ---------------------
-void TONE (int Frequenz, int Dauer);
+void TONE(int Frequenz, int Dauer);
 void Serial_Debugging_println(String);
 void Serial_Debugging_print(String);
 void soft_reset(byte = 0);
@@ -116,7 +116,7 @@ void hw_wdt_disable();
 void hw_wdt_enable();
 String print_Reset_reason(int Fehlernummer);
 void print_Core_task_is_running(String);
-void delay_Timer(String Text = "" , int interval = 1000);
+void delay_Timer(String Text = "", int interval = 1000);
 void list_all_LittleFS_files();
 void Serial_print_Optionen();
 void Watchdog_reset();
@@ -131,10 +131,10 @@ void trim_length_errorlist();
 //----------------------------- Fehlerlisten ----------------
 String Get_Fehlertext_from_Nummer(int Fehlernummer);
 void trim_length_errorlist();
-void Fehler_speichern(int Nummer) ;
+void Fehler_speichern(int Nummer);
 void read_Fehler_from_FS();
 //------------------------------ HTML -----------------------
-String processor(const String& var);
+String processor(const String &var);
 int groesse_raw_Literal();
 //------------------------------ OLED -----------------------
 void OLED_init();
@@ -144,7 +144,7 @@ void OLED_Zeile_loeschen(byte Zeilennummer);
 void OLED_print(String Text);
 void OLED_println(String Text, byte Zeile, byte Spalte);
 void drawSonderzeichen(byte, bool invers = false);
-void OLED_setCursor(byte Zeile , byte Spalte = 0 );
+void OLED_setCursor(byte Zeile, byte Spalte = 0);
 void show_Kontaktbildschirm();
 void show_Wertebildschirm();
 void show_Status();
@@ -152,7 +152,7 @@ void OLED_Draw_Bitmap();
 void OLED_Draw_Logo();
 //------------------------------ Wifi -------------------------
 unsigned long get_Local_Time();
-String make_time_stamp ();
+String make_time_stamp();
 void WIFI_Connect();
 void WiFiEvent(WiFiEvent_t event);
 void WIFI_watch_Task();
@@ -180,7 +180,7 @@ void Set_LED3();
 // ----------------------- Optionen ---------------------------
 void show_menue();
 void show_SubMenue();
-void  show_Eingabe_Bildschirm();
+void show_Eingabe_Bildschirm();
 void alle_Optionen_speichern();
 bool Save_one_Item(byte item);
 void Optionen_laden();
@@ -197,7 +197,7 @@ bool StringVergleich(String A, String B);
 String float_to_String(float f);
 float String_to_float(String s);
 String String_laenge_ergaenzen(String S, byte N);
-int String_to_int( String S);
+int String_to_int(String S);
 bool Bool(String s);
 //-------------------------Taupunktberechnung ------------------
 void Taupunkte_berechnen();
@@ -210,42 +210,42 @@ bool HTML_processor_is_working = false; // Zeigt an, dass gerade eine Webseite �
 int delay_interval_2 = 4000; // Dauer allgemeine Anzeigen
 int delay_interval_3 = 1500; // Dauer allgemeine Anzeigen
 
-#define Ionenkammer_pin 33// Anschluss an die Ionenkammer (Radon-Entlüftung)
-#define debugingPin 18    // Anschluss Debugging Taster
-#define RELAIPIN 26       // Anschluss des LüfterRelais
-#define DHTPIN_1 15       // Datenleitung für den DHT Sensor 1 (innen)
-#define DHTPIN_2 4        // Datenleitung für den DHT Sensor 2 (außen)
-#define DHT_Power_Pin 23  //Stromversorgung der DHT-Sensoren
-#define Tone_pin 19       // Pin für den Buzzer
+#define Ionenkammer_pin 33 // Anschluss an die Ionenkammer (Radon-Entlüftung)
+#define debugingPin 18     // Anschluss Debugging Taster
+#define RELAIPIN 26        // Anschluss des LüfterRelais
+#define DHTPIN_1 15        // Datenleitung für den DHT Sensor 1 (innen)
+#define DHTPIN_2 4         // Datenleitung für den DHT Sensor 2 (außen)
+#define DHT_Power_Pin 23   // Stromversorgung der DHT-Sensoren
+#define Tone_pin 19        // Pin für den Buzzer
 
 #define RELAIS_EIN HIGH
 #define RELAIS_AUS LOW
-bool rel = false; 
+bool rel = false;
 bool fehler = true;
 volatile char focus;
 //************************************** Sensoren **********************************************************
-/* 
-  #define DHTTYPE_1 DHT11           // DHT 22 
-  #define DHTTYPE_2 DHT11           // DHT 22   
+/*
+  #define DHTTYPE_1 DHT11           // DHT 22
+  #define DHTTYPE_2 DHT11           // DHT 22
 */
-DHT dht1(DHTPIN_1, DHTTYPE_1);    //Der Innensensor wird ab jetzt mit dht1 angesprochen
-DHT dht2(DHTPIN_2, DHTTYPE_2);    //Der Außensensor wird ab jetzt mit dht2 angesprochen
-float t1, h1, t2, h2, Taupunkt_1, Taupunkt_2, DeltaTP;  // Variablen für die Sensor und Taupunktwerte
+DHT dht1(DHTPIN_1, DHTTYPE_1);                         // Der Innensensor wird ab jetzt mit dht1 angesprochen
+DHT dht2(DHTPIN_2, DHTTYPE_2);                         // Der Außensensor wird ab jetzt mit dht2 angesprochen
+float t1, h1, t2, h2, Taupunkt_1, Taupunkt_2, DeltaTP; // Variablen für die Sensor und Taupunktwerte
 
 // ***************************   Korrekturwerte der einzelnen Sensoren*****  ********************************
-float Korrektur_t_1 = 0;   // Korrekturwert Innensensor Temperatur
-float Korrektur_t_2 = 0;   // Korrekturwert Außensensor Temperatur
-float Korrektur_h_1 = 0;   // Korrekturwert Innensensor Luftfeuchtigkeit
-float Korrektur_h_2 = 0;   // Korrekturwert Außensensor Luftfeuchtigkeit
+float Korrektur_t_1 = 0; // Korrekturwert Innensensor Temperatur
+float Korrektur_t_2 = 0; // Korrekturwert Außensensor Temperatur
+float Korrektur_h_1 = 0; // Korrekturwert Innensensor Luftfeuchtigkeit
+float Korrektur_h_2 = 0; // Korrekturwert Außensensor Luftfeuchtigkeit
 
 //*********************** Minimal- / Maximalwerte vom Relais **********************************************
-float SCHALTmin =  3.0;             // minnimaler Taupuntunterschied, bei dem das Relais schaltet
-float HYSTERESE =  1.0;             // Abstand von Ein- und Ausschaltpunkt        ==> fest, nicht einstellbar
-int   Luefter_Mindestlaufzeit = 5;  // Mindestlaufzeit vom Lüfter in Minuten
-float TEMP1_min = 10.0;             // Minnimale Innentemperatur, bei der die Lüftung aktiviert wird
-float TEMP1_max = 30.0;             // Maximale Innentemperatur, bei der die Lüftung aktiviert wird
-float TEMP2_min =-30.0;             // Minnimale Außentemperatur, bei der die Lüftung aktiviert wird
-float TEMP2_max = 30.0;             // Maximale Außentemperatur, bei der die Lüftung aktiviert wird
+float SCHALTmin = 3.0;           // minnimaler Taupuntunterschied, bei dem das Relais schaltet
+float HYSTERESE = 1.0;           // Abstand von Ein- und Ausschaltpunkt        ==> fest, nicht einstellbar
+int Luefter_Mindestlaufzeit = 5; // Mindestlaufzeit vom Lüfter in Minuten
+float TEMP1_min = 10.0;          // Minnimale Innentemperatur, bei der die Lüftung aktiviert wird
+float TEMP1_max = 30.0;          // Maximale Innentemperatur, bei der die Lüftung aktiviert wird
+float TEMP2_min = -30.0;         // Minnimale Außentemperatur, bei der die Lüftung aktiviert wird
+float TEMP2_max = 30.0;          // Maximale Außentemperatur, bei der die Lüftung aktiviert wird
 
 //********************************* "Schalter" *************************************************************
 bool use_WIFI = false;
@@ -256,27 +256,27 @@ bool debugging = false;
 // ***************************** Variablen für die Diagramme ***********************************************
 String Chart_TimeDate = "";
 String Chart_temp_in = "";
-String Chart_air_in  = "";
-String Chart_tp_in   = "";
-String Chart_temp_out= "";
+String Chart_air_in = "";
+String Chart_tp_in = "";
+String Chart_temp_out = "";
 String Chart_air_out = "";
-String Chart_tp_out  = "";
-String Chart_tp_delta= "";
+String Chart_tp_out = "";
+String Chart_tp_delta = "";
 //******************************** Lüfter-Laufzeit ********************************************************
 String Chart_lz = "";
 unsigned long Luefter_Laufzeit = 0;
 //*********************************** Debugging ***********************************************************
- esp_task_wdt_config_t config = {
-    .timeout_ms = 60000,                    // 60 Sekunden Toleranz
-    .idle_core_mask = (1 << 0) | (1 << 1),  // Überwacht Idle-Tasks beider Kerne
-    .trigger_panic = true                   // Reset bei Fehler
-  };  
+esp_task_wdt_config_t config = {
+    .timeout_ms = 60000,                   // 60 Sekunden Toleranz
+    .idle_core_mask = (1 << 0) | (1 << 1), // Überwacht Idle-Tasks beider Kerne
+    .trigger_panic = true                  // Reset bei Fehler
+};
 
-String FehlerString ="";
+String FehlerString = "";
 String OptionenString = "";
 String SpeicherString = "";
 String WIFI_Status_String = "";
- void Fehler_speichern(int Nummer);
+void Fehler_speichern(int Nummer);
 String Get_Fehlertext_from_Nummer(int Fehlernummer);
 void read_Fehler_from_FS();
 //**************************** Radon **********************************************************************
@@ -287,127 +287,146 @@ unsigned long Luefter_Radon_Start;
 unsigned long Luefter_Laufzeit_Radon = 0;
 //*************************** Variablen für Zeitfunktionen  ***********************************************
 unsigned long currentTime = millis();
-unsigned long previousTime = 0; 
+unsigned long previousTime = 0;
 unsigned long previousMillis = 0;
-unsigned long Luefter_Start  = 0;
-long last_calculation = -10000;  // alle 10 Sekunden Taupunkt berechnen
+unsigned long Luefter_Start = 0;
+long last_calculation = -10000; // alle 10 Sekunden Taupunkt berechnen
 //******************************************** Ende Variabeln ***********************************************
 
 //-----------------------------------------------------------------------------------------------------------
 //----------------------------- SETUP ----- Hinweis: Diese Task läuft auf Core-1-----------------------------
 //-----------------------------------------------------------------------------------------------------------
 
-void setup() 
-{ 
+void setup() {
   Serial.begin(115200);
   pinMode(RELAIPIN, OUTPUT);          // Relaispin als Output definieren
   digitalWrite(RELAIPIN, RELAIS_EIN); // Relais einschalten
 
-  pinMode (debugingPin, INPUT_PULLUP);    // Taste zur Ausgabe von Debugging-Infos
-  pinMode (Ionenkammer_pin,INPUT_PULLUP); //Radon Vorsorge
+  pinMode(debugingPin, INPUT_PULLUP);     // Taste zur Ausgabe von Debugging-Infos
+  pinMode(Ionenkammer_pin, INPUT_PULLUP); // Radon Vorsorge
   Optionen_laden();
-  
-  if (use_WIFI == false) use_Charts = false;  //--- Charts geht nicht ohne WIFI!
-  
-   Serial_Debugging_println("");
-  Serial_Debugging_println("----------------- Taupunktlüfter -----------------------------"); 
-  Serial_Debugging_println("----------------  "  + String(Software_version) +  " ------------------------------");
+
+  if (use_WIFI == false) {
+    use_Charts = false; //--- Charts geht nicht ohne WIFI!
+  }
+
+  Serial_Debugging_println("");
+  Serial_Debugging_println("----------------- Taupunktlüfter -----------------------------");
+  Serial_Debugging_println("----------------  " + String(Software_version) + " ------------------------------");
   Serial_Debugging_println("");
 
   //-------------------------------- Watchdog -----------------------------------------------------------//
-   esp_task_wdt_init(&config);               // Den Watchdog starten
-   esp_task_wdt_add(NULL);                   // Den Haupt-Task (loop) registrieren
-   esp_task_wdt_reconfigure(&config);
-   esp_task_wdt_reset();
-  Serial.print("Der task_wdt wurde auf "); Serial.print (config.timeout_ms); Serial.println(" Millisekunden gesetzt");
+  esp_task_wdt_init(&config); // Den Watchdog starten
+  esp_task_wdt_add(NULL);     // Den Haupt-Task (loop) registrieren
+  esp_task_wdt_reconfigure(&config);
+  esp_task_wdt_reset();
+  Serial.print("Der task_wdt wurde auf ");
+  Serial.print(config.timeout_ms);
+  Serial.println(" Millisekunden gesetzt");
   //-------------------------------- Watchdog -----------------------------------------------------------//
-      
+
   pinMode(DHT_Power_Pin, OUTPUT);    // Port, von dem die DHT-Sensoren den Strom bekommen
   digitalWrite(DHT_Power_Pin, HIGH); // Strom für DHT-Sensoren einschalten
   Encoder_initialisieren();
   reset_Encoder(0);
-  
-  timer_initialisieren();
-  OLED_init();  // OLED initialisieren
-  if (!LittleFS.begin(true)) Serial.println(F("Kritischer Fehler: LittleFS konnte nicht gemountet werden!"));  // Dateisystem überprüfen / erstellen
 
-   setup_Ampel();
+  timer_initialisieren();
+  OLED_init(); // OLED initialisieren
+  if (!LittleFS.begin(true)) {
+    Serial.println(F("Kritischer Fehler: LittleFS konnte nicht gemountet werden!")); // Dateisystem überprüfen / erstellen
+  }
+
+  setup_Ampel();
   //--------------------------------------------------- WIFI -------------------------------------------------------------------------------
-  
- if (use_WIFI == true) 
- {  
-  // Damit der Server bei Klein- und Großschreibung reagiert
-  server.rewrite("/daten", "/Daten");
-  server.rewrite("/optionen", "/Optionen");
-  server.rewrite("/fehler", "/Fehler");
-  server.rewrite("/speicher", "/Speicher");
-  server.rewrite("/datendatei", "/Datendatei.txt");
-  
-  WIFI_Connect();  // WIFI-Verbindung herstellen und Server starten
- }
+
+  if (use_WIFI == true) {
+    // Damit der Server bei Klein- und Großschreibung reagiert
+    server.rewrite("/daten", "/Daten");
+    server.rewrite("/optionen", "/Optionen");
+    server.rewrite("/fehler", "/Fehler");
+    server.rewrite("/speicher", "/Speicher");
+    server.rewrite("/datendatei", "/Datendatei.txt");
+
+    WIFI_Connect(); // WIFI-Verbindung herstellen und Server starten
+  }
   print_Reset_reason(0); // Zur Fehlersuche: Warum ist der ESP gerade neu gestartet?
 
   //--------------------------------------------- Sensoren starten ------------------------------------------------------------------------
-  dht1.begin(); 
-  dht2.begin(); 
-  
+  dht1.begin();
+  dht2.begin();
+
   digitalWrite(RELAIPIN, RELAIS_AUS); // Relais ausschalten
   Serial_Debugging_println("Relais ausgeschaltet");
- //---------------------------------------------- Chronik / Charts ----------------------------------------------------------------------------
-  if (Datenspeicher > 0){ load_Chronik_from_LittleFS(); } // Alle Datensätze aus dem LittleFS-Speicher einlesen, für die Verwendung von Charts
-  //-------------------------------------------- Debugging ------------------------------------------------------------------------------------
-  //if (debugging) serial_debugging_all();
-   focus = 0;         // Das Logo vom Taukmunktlüfter auf dem Display als Startbildschirm
-   checkButton();
-//------------------------------------------------------------ Ende Setup  --------------------------------------------------------------------
+  //---------------------------------------------- Chronik / Charts ----------------------------------------------------------------------------
+  if (Datenspeicher > 0) {
+    load_Chronik_from_LittleFS();
+  }          // Alle Datensätze aus dem LittleFS-Speicher einlesen, für die Verwendung von Charts
+             //-------------------------------------------- Debugging ------------------------------------------------------------------------------------
+             // if (debugging) serial_debugging_all();
+  focus = 0; // Das Logo vom Taukmunktlüfter auf dem Display als Startbildschirm
+  checkButton();
+  //------------------------------------------------------------ Ende Setup  --------------------------------------------------------------------
 }
 
-void loop() 
-{    
- Watchdog_reset();
- if (use_WIFI == true) WIFI_watch_Task(); // Kontrolliert alle 60000 ms, ob WIFI noch vorhanden ist
- if ((last_calculation + 10000) < millis()) Taupunkte_berechnen(); // alle 10 Sekunden die Werte neu ermitteln  
- if ((digitalRead(debugingPin)) == LOW)serial_debugging_all();
- 
- //------------------------------------------------- Radon funktionalität --------------------------------------------------------
- bool Radonsignal_old = Radonsignal;
- if (digitalRead(Ionenkammer_pin) == LOW){ Radonsignal = true; Radonfunktionalitaet = true;} else Radonsignal = false;
- if  (Radonsignal_old != Radonsignal) if(Radonsignal == true)
-   {
+void loop() {
+  Watchdog_reset();
+  if (use_WIFI == true) {
+    WIFI_watch_Task(); // Kontrolliert alle 60000 ms, ob WIFI noch vorhanden ist
+  }
+  if ((last_calculation + 10000) < millis()) {
+    Taupunkte_berechnen(); // alle 10 Sekunden die Werte neu ermitteln
+  }
+  if ((digitalRead(debugingPin)) == LOW) {
+    serial_debugging_all();
+  }
+
+  //------------------------------------------------- Radon funktionalität --------------------------------------------------------
+  bool Radonsignal_old = Radonsignal;
+  if (digitalRead(Ionenkammer_pin) == LOW) {
+    Radonsignal = true;
+    Radonfunktionalitaet = true;
+  } else {
+    Radonsignal = false;
+  }
+  if (Radonsignal_old != Radonsignal) {
+    if (Radonsignal == true) {
       Fehler_speichern(400);
       Luefter_Radon_Start = millis();
-         
-   }else{
-     Luefter_Laufzeit_Radon = millis() - Luefter_Radon_Start;
-     Fehler_speichern(401);
-    }
- //---------------------------------------------------------------------------------------------------------------------------------
 
- if ((int(focus)) < 4)  focus = get_Encoder_pos(0,3 ,true);  // Durchlauf durch die einzelnen Bildschirme
-   switch (focus) 
- {
-  case 0: OLED_Draw_Logo(); //-------------- Taupunkt Logo anzeigen
-    break;    
-  case 1:     //------------------------------ Temperatur- und Luftfeuchtigkeitswerte
-     show_Wertebildschirm();
-    break;    
-  case 2:   //-------------------------------- Status- Bildschirmf
+    } else {
+      Luefter_Laufzeit_Radon = millis() - Luefter_Radon_Start;
+      Fehler_speichern(401);
+    }
+  }
+  //---------------------------------------------------------------------------------------------------------------------------------
+
+  if ((int(focus)) < 4) {
+    focus = get_Encoder_pos(0, 3, true); // Durchlauf durch die einzelnen Bildschirme
+  }
+  switch (focus) {
+  case 0:
+    OLED_Draw_Logo(); //-------------- Taupunkt Logo anzeigen
+    break;
+  case 1: //------------------------------ Temperatur- und Luftfeuchtigkeitswerte
+    show_Wertebildschirm();
+    break;
+  case 2: //-------------------------------- Status- Bildschirmf
     show_Status();
-    break;    
+    break;
   case 3:
     show_Kontaktbildschirm(); //---------------- Kontaktdaten
-    break;    
- case 'A':      //---------------------------- OptionsMenü
+    break;
+  case 'A': //---------------------------- OptionsMenü
     show_menue();
-    break;    
- case 'B':
+    break;
+  case 'B':
     show_SubMenue(); //---------------------- jeweiliges Untermenü
-    break;    
- case 'C':
+    break;
+  case 'C':
     show_Eingabe_Bildschirm(); //------------ Eingabe der Optionswerte
     break;
   default:
-     Set_LED1(); // dürfte eigentlich nie hier ankommen
-    break; 
- }
+    Set_LED1(); // dürfte eigentlich nie hier ankommen
+    break;
+  }
 }
