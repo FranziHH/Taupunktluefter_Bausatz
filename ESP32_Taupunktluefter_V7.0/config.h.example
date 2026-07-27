@@ -1,0 +1,55 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#include <Arduino.h>
+
+#define use_OLED true
+/*
+  OLED Types:
+  SSH1106_128x64      1.3" SSH1106
+  SSD1306_128x64      0.96" SSD1306 / 2.42" SSD1309
+*/
+#define OLED_TYPE SSH1106_128x64
+#define I2C_ADDR 0x3C             // or 0x3D
+
+#define DHTTYPE_1 DHT22
+#define DHTTYPE_2 DHT22
+
+param Parameter[] = {       
+
+// Bezeichnung(max 15 Z.) Menü,   Type,   Zeichenfolge (max 21 Z.)
+  {"Funktionen",          1,       'M',   "-"}, // Funktionen
+  {"WIFI",                1,       'B',   "1"},
+  {"Datenspeicher",       1,       'F',   "400"},
+  {"Charts",              1,       'B',   "1"},
+  {"Ampel",               1,       'B',   "1"},
+  {"Debuggingmodus",      1,       'B',   "1"},
+  
+  {"Sensor Korrekt.",     2,       'M',   "0"}, //Sensoren Korrektur
+  {"Temp. innen",         2,       'F',   "0.0"},
+  {"Temp. aussen",        2,       'F',   "0.0"},
+  {"Luftf. innen",        2,       'F',   "0.0"},
+  {"Luftf. aussen",       2,       'F',   "0.0"},
+  
+  {"Temp. Optionen",      3,       'M',   "-"}, // Temperatur Optionen
+  {"Min delta TP",        3,       'F',   "2"},
+  {"Min Temp innen",      3,       'F',   "10.0"},
+  {"Max Temp innen",      3,       'F',   "30.0"},
+  {"Min Temp aussen",     3,       'F',   "-30.0"},
+  {"Max Temp aussen",     3,       'F',   "30.0"},
+  
+  {"Internet",            4,       'M',   "-"},   // Internet
+  {"IP-Adresse",          4,       'S',   "DHCP"},
+  {"Gateway",             4,       'S',   "192.168.178.1"},
+  {"Mask",                4,       'S',   "255.255.255.0"},
+  {"SSID",                4,       'S',   "FritzUS"},
+  {"Passwort",            4       ,'S',   "48094564919405773644"},  
+  {"DNS",                 4,       'S',   "192.168.178.1"},          // ACHTUNG!!! DNS2 = (8.8.8.8) fest vergeben!
+
+  {"Wartung",             5,       'M',   "-"},   // Wartung
+  {"Format LittleFS",     5,       'B',   "0"},
+  {"Optionen reset",      5,       'B',   "0"},
+  {"CPU Neustart",        5,       'B',   "0"}
+};
+
+#endif // CONFIG_H

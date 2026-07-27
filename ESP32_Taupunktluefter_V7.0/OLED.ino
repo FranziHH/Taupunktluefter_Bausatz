@@ -133,7 +133,7 @@ void show_Kontaktbildschirm()
     drawSonderzeichen(2);// Sonderzeichen ü
    OLED_print("fter");
    
-   OLED_println( "V ",1,7); OLED_print(Software_version);
+   OLED_println( "v",1,7); OLED_print(Software_version);
    
    OLED_println("Schmerold",3,0); 
    OLED_println("Programmtechnik",4,0); 
@@ -317,7 +317,7 @@ void OLED_Draw_Logo() {
   oled.invertText(false);
   OLED_println("Taupunktl",7,0); 
     drawSonderzeichen(2);// Sonderzeichen ü
-      OLED_print("fter V"+Software_version);
+      OLED_print("fter "+Software_version);
   oled.drawBitmap(0, 0, Taupunt_bitmap, 128, 53);
   oled.update();
   }

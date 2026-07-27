@@ -365,7 +365,7 @@ void SpeicherGroessen() //------------------------------ Für HTML Ausgabe -----
    SpeicherString += "LittleFS.totalBytes: "+ String(tBytes) + "<br>"; 
    SpeicherString += "LittleFS.usedBytes: " + String(uBytes) + "<br>"; 
    SpeicherString += "LittleFS.freeBytes: " + String(tBytes-uBytes) + "<br>";
-   SpeicherString += " das entspricht "   + String((tBytes-uBytes)/(Chart_TimeDate_length+laenge_Datensatz*7)) + " Datens&aumlntze <br>"; 
+   SpeicherString += " das entspricht "   + String((tBytes-uBytes)/(Chart_TimeDate_length+laenge_Datensatz*7)) + " Datens&aumltze <br>"; 
 }
 
   void serial_WIFI_Status()

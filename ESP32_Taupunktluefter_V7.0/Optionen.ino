@@ -32,15 +32,15 @@ struct my_point {
 char Tastatur_40[43] = {"0123456789.,-:ABCDEFGHIJKLMNOPQRSTUVWXYZ "};     // Buchstaben-Tastatur  
 char Tastatur_40_k[43]={"!%&/()=?*#{}<>abcdefghijklmnopqrstuvwxyz "};     // Buchstaben-Tastatur -klein
 char Tasten[4][7] ={" - "," Exit "," Del ","  OK  "};                    // Steuerungstasten
- 
+
+/* nach config.h verschoben */
+/* 
 typedef struct {
  char Bezeichnung[16];
  byte Menue;
  char Type;       // B = bool, F = float, S = String, M = Menü
 char Zeichenfolge[laenge_Zeichenfolge]; 
 }param;
-
-
 
 param Parameter[] = {       
 
@@ -78,6 +78,7 @@ param Parameter[] = {
   {"Optionen reset",      5,       'B',   "0"},
   {"CPU Neustart",        5,       'B',   "0"}
 };
+*/
 
 bool Option_Aenderung = false;  // wurde an den Optionen etwas geändert?
 byte Anzahl_Menues = 5;
@@ -452,6 +453,7 @@ byte String_to_MenuePos(String s)
       return i;
    }
   }
+  return 0;
 }
 
 

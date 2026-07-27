@@ -7,7 +7,7 @@
 // 06/2026
 //////////////////////////////////////////////////////////////////////////////
 
-#include "LittleFS.h";
+#include "LittleFS.h"
 #define fileDateTime "/FDT.txt"     //File_Date_Time ==> Labels für die Charts
 #define chronik_interval 3600       // 3600 = eine Stunde, 900 =15 Minuten, 60 = 1 Minuten
 #define Chart_TimeDate_length 17    //'01.01.26 04:22', ==> 17 Zeichen

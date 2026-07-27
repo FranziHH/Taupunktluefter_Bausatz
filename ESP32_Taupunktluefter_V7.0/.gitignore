@@ -1,0 +1,5 @@
+.pio
+.vscode
+config.h
+config.h_*
+notes.txt

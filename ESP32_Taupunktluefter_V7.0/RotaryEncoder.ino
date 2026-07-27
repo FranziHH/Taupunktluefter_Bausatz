@@ -6,7 +6,7 @@
 // Ulrich Schmerold
 // 06/2026
 //////////////////////////////////////////////////////////////////////////////
-
+#include <ESP32Time.h>
 #include <RotaryEncoder.h>
 #define encoderPinA 35  // Rorary Pin A
 #define encoderPinB 32  // Rorary Pin B

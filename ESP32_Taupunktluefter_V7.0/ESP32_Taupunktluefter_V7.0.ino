@@ -1,38 +1,79 @@
 //////////////////////////////////////////////////////////////////////////////
 // ESP32-TaupunktLüfter 
 // mit dem ESP32 Wroom 32
-// für Arduino-ESP32 Release v3.3.8 
+// für Arduino-ESP32 Release v3.3.8
+// --------------------------------
 //
 // Ulrich Schmerold
 // 06/2026
 //////////////////////////////////////////////////////////////////////////////
+//
+// Franziska Walter
+// 07/2026
+// 
+// bei Nutzung der ArduinoIDE:
+// den Ordner %USERPROFILE%\Documents\Arduino\libraries sichern und komplett entleeren
+// nur die unten angegebenen Libraries installieren!
+// 
+// Aktuell, am 26.07.2026 können alle Boards und Bibliotheken auf den aktuellen Stand aktualsisiert werden
+//
+// Board: 
+//    Arduino-ESP32 Release v3.3.11
+// 
+// Libraries:
+//	  adafruit/DHT sensor library@^1.4.7
+//	  fbiego/ESP32Time@^2.0.6
+//	  esp32async/AsyncTCP@^3.5.0
+//	  esp32async/ESPAsyncWebServer@^3.12.0
+//	  gyverlibs/GyverOLED@^1.6.4
+//	  mathertel/RotaryEncoder@^1.6.0
+//
+//////////////////////////////////////////////////////////////////////////////
 
-String Software_version = "7.0";
+String Software_version = "7.0.1";
 #define Hostname     "TPL-V7.0"
-#define use_OLED true
+// #define use_OLED true
 
 // Dieser Code benötig zwingend die folgenden Libraries:
 #include <string.h>
-#include <DHT.h>
+#include <DHT.h>                // adafruit/DHT sensor library@^1.4.7
 #include <time.h>
-#include <ESP32Time.h>
+#include <ESP32Time.h>          // fbiego/ESP32Time@^2.0.6
 #include <WiFi.h>
-#include <AsyncTCP.h>
-#include <ESPAsyncWebServer.h>  //Version 3.7.10 !!!!!! Siehe: https://docs.arduino.cc/libraries/esp-async-webserver/#Releases
+#include <AsyncTCP.h>           // esp32async/AsyncTCP@^3.5.0
+#include <ESPAsyncWebServer.h>  // esp32async/ESPAsyncWebServer@^3.12.0     // Version 3.7.10 !!!!!! Siehe: https://docs.arduino.cc/libraries/esp-async-webserver/#Releases
 #include <Wire.h>
-#include <GyverOLED.h>
+#include <GyverOLED.h>          // gyverlibs/GyverOLED@^1.6.4
 #include <esp_task_wdt.h>
 #include <StreamString.h>
 #include "LittleFS.h"
+                                // mathertel/RotaryEncoder@^1.6.0
+                                
+/* Code für config.h umstrukturiert */
+#define laenge_Zeichenfolge 36    //35 Zeichen und /0
 
-GyverOLED<SSH1106_128x64> oled;
+typedef struct {
+ char Bezeichnung[16];
+ byte Menue;
+ char Type;       // B = bool, F = float, S = String, M = Menü
+char Zeichenfolge[laenge_Zeichenfolge]; 
+}param;
+
+#if __has_include("config.h")
+    #include "config.h"
+#else
+    #error "ERROR: 'config.h' is missing! Please copy 'config.h.example' to 'config.h' and enter your data."
+#endif
+/* Code für config.h umstrukturiert */
+
+GyverOLED<OLED_TYPE> oled(I2C_ADDR);
 static AsyncWebServer server(80);
 
 ESP32Time rtc;  
 String stamp;  // Variable für den Zeitstempel.
 
 //************************************** WIFI ***************************************************************
-#define laenge_Zeichenfolge 36    //35 Zeichen und /0
+// #define laenge_Zeichenfolge 36    //35 Zeichen und /0
 bool DHCP = true;
 char ssid [laenge_Zeichenfolge]; 
 char password [laenge_Zeichenfolge]; 
@@ -183,8 +224,10 @@ bool rel = false;
 bool fehler = true;
 volatile char focus;
 //************************************** Sensoren **********************************************************
-#define DHTTYPE_1 DHT22           // DHT 22 
-#define DHTTYPE_2 DHT22           // DHT 22  
+/* 
+  #define DHTTYPE_1 DHT11           // DHT 22 
+  #define DHTTYPE_2 DHT11           // DHT 22   
+*/
 DHT dht1(DHTPIN_1, DHTTYPE_1);    //Der Innensensor wird ab jetzt mit dht1 angesprochen
 DHT dht2(DHTPIN_2, DHTTYPE_2);    //Der Außensensor wird ab jetzt mit dht2 angesprochen
 float t1, h1, t2, h2, Taupunkt_1, Taupunkt_2, DeltaTP;  // Variablen für die Sensor und Taupunktwerte
