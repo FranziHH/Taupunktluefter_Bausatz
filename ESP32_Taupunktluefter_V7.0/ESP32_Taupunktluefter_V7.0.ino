@@ -350,7 +350,10 @@ void setup() {
 
     WIFI_Connect(); // WIFI-Verbindung herstellen und Server starten
   }
-  print_Reset_reason(0); // Zur Fehlersuche: Warum ist der ESP gerade neu gestartet?
+
+  if (ext_debug == true) {
+    print_Reset_reason(0); // Zur Fehlersuche: Warum ist der ESP gerade neu gestartet?
+  }
 
   //--------------------------------------------- Sensoren starten ------------------------------------------------------------------------
   dht1.begin();
@@ -362,7 +365,7 @@ void setup() {
   //---------------------------------------------- Chronik / Charts ----------------------------------------------------------------------------
   if (Datenspeicher > 0) {
     load_Chronik_from_LittleFS();
-  } 
+  }
 
   // Alle Datensätze aus dem LittleFS-Speicher einlesen, für die Verwendung von Charts
   //-------------------------------------------- Debugging ------------------------------------------------------------------------------------

@@ -158,6 +158,7 @@ const ctx=document.getElementById('runtimeChart').getContext('2d');
  <a href="mailto:info@taupunktluefter.de" style="display:block;color:#007bff;text-decoration:none;font-size:14px;">E-Mail: info@taupunktluefter.de</a>
  <a href="http://taupunktluefter.de" target="_blank" style="display:block;color:#007bff;text-decoration:none;font-size:14px;">Webseite: www.taupunktluefter.de</a>
  <a href="https://github.com" target="_blank" style="display:block;margin-top:10px;color:#007bff;font-weight:bold;">Quellcode, Handbuch und mehr... bei Github</a>
+ <a href="https://github.com/FranziHH/Taupunktluefter_Bausatz/tree/main-FranziHH" target="_blank" style="display:block;margin-top:10px;color:#007bff;font-weight:bold;">Angepasster Code: Franziska Walter</a>
 </div> 
 
 <!-- Navigationsbalken -->
@@ -209,7 +210,7 @@ char Daten[] PROGMEM = R"rawliteral(
 <body>
 <div style="line-height: 1.1;">
   <font size="6"><b>TauPunktL&uuml;fter</b></font>
-  <font size="4"><b>V%Version%</b></font><br>  
+  <font size="4"><b>%Version%</b></font><br>  
   <div style="margin-top: 8px; margin-bottom:8px;">
   <font size="5"><b>Daten</b></font>
   <p>
@@ -296,7 +297,7 @@ char Optionen[] PROGMEM = R"rawliteral(
 <body>
 <div style="line-height: 1.1;">
   <font size="6"><b>TauPunktL&uuml;fter</b></font>
-  <font size="4"><b>V%Version%</b></font><br>  
+  <font size="4"><b>%Version%</b></font><br>  
   <div style="margin-top: 8px; margin-bottom:8px;">
   <font size="5"><b>Optionen</b></font>
   <table class="MsoTableGrid" border="1" cellspacing="3" cellpadding="0">
@@ -341,7 +342,7 @@ char Speicher[] PROGMEM = R"rawliteral(
 <body>
 <div style="line-height: 1.1;">
   <font size="6"><b>TauPunktL&uuml;fter</b></font>
-  <font size="4"><b>V%Version%</b></font><br>  
+  <font size="4"><b>%Version%</b></font><br>  
   <div style="margin-top: 8px; margin-bottom:8px;">
   <font size="5"><b>Speicher</b></font>
   <pre>%SpeicherString%</pre>
@@ -382,7 +383,7 @@ char Fehler[] PROGMEM = R"rawliteral(
 
 <div style="line-height: 1.1;">
   <font size="6"><b>TauPunktL&uuml;fter</b></font>
-  <font size="4"><b>V%Version%</b></font><br>  
+  <font size="4"><b>%Version%</b></font><br>  
   <div style="margin-top: 8px; margin-bottom:8px;">
   <font size="5"><b>Fehlerliste</b></font>
   <button style="padding:5px 12px;background:#f0ad4e;border:none;border-radius:4px;color:white;font-weight:bold;margin-left:10px;cursor:pointer;"onclick="clearLog()">

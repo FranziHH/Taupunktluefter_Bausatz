@@ -1,5 +1,8 @@
 .pio
 .vscode
+build_output/
 config.h
 config.h_*
+config.h.private
 notes.txt
+firmware/*Private*
