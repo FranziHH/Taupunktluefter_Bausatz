@@ -688,7 +688,18 @@ void Optionen_to_String() //------------------------------ Für HTML Ausgabe ---
         ff = ff + "."; // ;-)
       }
       //-------------------------------------------------------------------------------------------
-      OptionenString += (String(Parameter[i].Bezeichnung) + ff + "| " + String(Parameter[i].Menue) + " | " + String(Parameter[i].Type) + " | " + String(Parameter[i].Zeichenfolge) + "<br>");
+      // Passwort entfernen !!!
+      String wert = String(Parameter[i].Zeichenfolge);
+      String bez = String(Parameter[i].Bezeichnung);
+
+      if (bez.equalsIgnoreCase("Passwort")) {
+        wert = "";
+        for (unsigned int p = 0; p < String(Parameter[i].Zeichenfolge).length(); p++) {
+          wert += "*";
+        }
+      }
+      //-------------------------------------------------------------------------------------------
+      OptionenString += (bez + ff + "| " + String(Parameter[i].Menue) + " | " + String(Parameter[i].Type) + " | " + wert + "<br>");
     }
   }
 }
