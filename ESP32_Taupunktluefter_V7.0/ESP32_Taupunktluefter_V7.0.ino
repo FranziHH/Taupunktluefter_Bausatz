@@ -88,6 +88,7 @@ IPAddress dns2(8, 8, 8, 8);             // DNS-Server von Google
 //------------------------ Chronik -----------------------
 void Datenstreams_leeren();
 bool load_Chronik_from_LittleFS();
+bool exists_Datensatz(String name);
 String load_Datensatz(String name);
 bool chronic_update(String, float);
 bool format_LittleFS();
@@ -337,8 +338,8 @@ void setup() {
   }
 
   setup_Ampel();
-  //--------------------------------------------------- WIFI -------------------------------------------------------------------------------
 
+  //--------------------------------------------------- WIFI -------------------------------------------------------------------------------
   if (use_WIFI == true) {
     // Damit der Server bei Klein- und Großschreibung reagiert
     server.rewrite("/daten", "/Daten");
@@ -357,12 +358,16 @@ void setup() {
 
   digitalWrite(RELAIPIN, RELAIS_AUS); // Relais ausschalten
   Serial_Debugging_println("Relais ausgeschaltet");
+
   //---------------------------------------------- Chronik / Charts ----------------------------------------------------------------------------
   if (Datenspeicher > 0) {
     load_Chronik_from_LittleFS();
-  }          // Alle Datensätze aus dem LittleFS-Speicher einlesen, für die Verwendung von Charts
-             //-------------------------------------------- Debugging ------------------------------------------------------------------------------------
-             // if (debugging) serial_debugging_all();
+  } 
+
+  // Alle Datensätze aus dem LittleFS-Speicher einlesen, für die Verwendung von Charts
+  //-------------------------------------------- Debugging ------------------------------------------------------------------------------------
+  // if (debugging) serial_debugging_all();
+
   focus = 0; // Das Logo vom Taukmunktlüfter auf dem Display als Startbildschirm
   checkButton();
   //------------------------------------------------------------ Ende Setup  --------------------------------------------------------------------

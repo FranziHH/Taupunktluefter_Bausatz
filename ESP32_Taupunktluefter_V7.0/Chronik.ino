@@ -10,8 +10,8 @@
 #include "LittleFS.h"
 #define fileDateTime "/FDT.txt"  // File_Date_Time ==> Labels für die Charts
 #define chronik_interval 3600    // 3600 = eine Stunde, 900 =15 Minuten, 60 = 1 Minuten
-#define Chart_TimeDate_length 17 //'01.01.26 04:22', ==> 17 Zeichen
-#define laenge_Datensatz 8       //'-16.4', ==> 8 Zeichen
+#define Chart_TimeDate_length 16 //'01.01.26 04:22', ==> 17 Zeichen !!!! der erste geschriebene Datensatz besitzt KEIN Komma!!!
+#define laenge_Datensatz 7       //'-16.4', ==> 8 Zeichen !!!! der erste geschriebene Datensatz besitzt KEIN Komma!!!
 
 unsigned long last_save = 0;
 int Anzahl_Werte = 0;
@@ -26,6 +26,7 @@ String tmp_Chart_tp_in;
 String tmp_Chart_tp_out;
 String tmp_Chart_lz;
 String tmp_Chart_lzR;
+
 //------------------------------------- Alle Daten löschen -----------------------------------------------------------------------
 void Datenstreams_leeren() {
   Chart_TimeDate = "";
@@ -56,8 +57,8 @@ String trim_length_datastream(String Datenstream, int laenge_pro_Datensatz) {
   return Datenstream;
 }
 
-bool test_TimeDate() //--------------------------------------- Datum und Zeit  testen für Chart labels
-{
+//--------------------------------------- Datum und Zeit  testen für Chart labels
+bool test_TimeDate() {
   int i;
   char c;
   Watchdog_reset();
@@ -118,9 +119,11 @@ bool test_TimeDate() //--------------------------------------- Datum und Zeit  t
   tmp_Chart_TimeDate = trim_length_datastream(tmp_Chart_TimeDate, Chart_TimeDate_length);
   tmp_Chart_TimeDate = tmp_Chart_TimeDate + "'" + stamp + "'";
   return true;
-} //-------------------------------------------------------------------------------------------
-bool test_temp_in() //--------------------------------------- Innentemperatur testen
-{
+}
+//-------------------------------------------------------------------------------------------
+
+//--------------------------------------- Innentemperatur testen
+bool test_temp_in() {
   char buffer[6];
   Watchdog_reset(); // Watchdog zurücksetzen
   if (isnan(t1) or (t1 < -50) or (t1 > 60)) {
@@ -136,9 +139,11 @@ bool test_temp_in() //--------------------------------------- Innentemperatur te
   dtostrf(t1, 5, 1, buffer);                                                       // Den Sensorwert in das korrekte Format bringen: 5 Stellen, eine Nachkommastelle (-10,2)
   tmp_Chart_temp_in = tmp_Chart_temp_in + "'" + buffer + "'";                      // Den Sensorwert an den temporären Datenstream anhängen
   return true;                                                                     // Rückgabewert: alles gut gelaufen
-} //-------------------------------------------------------------------------------------------
-bool test_temp_Out() //--------------------------------------- Außentemperatur testen
-{
+}
+//-------------------------------------------------------------------------------------------
+
+//--------------------------------------- Außentemperatur testen
+bool test_temp_Out() {
   char buffer[6];
   Watchdog_reset(); // Watchdog zurücksetzen
   if (isnan(t2) or (t2 < -50) or (t2 > 60)) {
@@ -154,10 +159,11 @@ bool test_temp_Out() //--------------------------------------- Außentemperatur 
   dtostrf(t2, 5, 1, buffer);                                                         // Den Sensorwert in das korrekte Format bringen: 5 Stellen, eine Nachkommastelle (-10,2)
   tmp_Chart_temp_out = tmp_Chart_temp_out + "'" + buffer + "'";                      // Den Sensorwert an den temporären Datenstream anhängen
   return true;                                                                       // Rückgabewert: alles gut gelaufen
+}
+//-----------------------------------------------------------------------------------------------
 
-} //-----------------------------------------------------------------------------------------------
-bool test_air_in() //--------------------------------------- Innen-Luftfeuchte testen
-{
+//--------------------------------------- Innen-Luftfeuchte testen
+bool test_air_in() {
   char buffer[6];
   Watchdog_reset(); // Watchdog zurücksetzen
   if (isnan(h1) or (h1 < 0) or (h1 > 100)) {
@@ -173,10 +179,11 @@ bool test_air_in() //--------------------------------------- Innen-Luftfeuchte t
   dtostrf(h1, 5, 0, buffer);                                                     // Den Sensorwert in das korrekte Format bringen: 5 Stellen, eine Nachkommastelle (-10,2)
   tmp_Chart_air_in = tmp_Chart_air_in + "'" + buffer + "'";                      // Den Sensorwert an den temporären Datenstream anhängen
   return true;                                                                   // Rückgabewert: alles gut gelaufen
+}
+//-------------------------------------------------------------------------------------------
 
-} //-------------------------------------------------------------------------------------------
-bool test_air_out() //--------------------------------------- Außen-Luftfeuchte testen
-{
+//--------------------------------------- Außen-Luftfeuchte testen
+bool test_air_out() {
   char buffer[6];
   Watchdog_reset(); // Watchdog zurücksetzen
   if (isnan(h2) or (h2 < 0) or (h2 > 100)) {
@@ -192,10 +199,11 @@ bool test_air_out() //--------------------------------------- Außen-Luftfeuchte
   dtostrf(h2, 5, 0, buffer);                                                       // Den Sensorwert in das korrekte Format bringen: 5 Stellen, eine Nachkommastelle (-10,2)
   tmp_Chart_air_out = tmp_Chart_air_out + "'" + buffer + "'";                      // Den Sensorwert an den temporären Datenstream anhängen
   return true;                                                                     // Rückgabewert: alles gut gelaufen
+}
+//--------------------------------------------------------------------------------------------
 
-} //--------------------------------------------------------------------------------------------
-bool test_delta_TP() //--------------------------------------- Unterschied der Taupunkte 1/2 testen
-{
+//--------------------------------------- Unterschied der Taupunkte 1/2 testen
+bool test_delta_TP() {
   char buffer[6];
   Watchdog_reset(); // Watchdog zurücksetzen
   if (isnan(DeltaTP) or (DeltaTP < -50) or (DeltaTP > 60)) {
@@ -211,11 +219,11 @@ bool test_delta_TP() //--------------------------------------- Unterschied der T
   dtostrf(DeltaTP, 5, 1, buffer);                                                    // Den Sensorwert in das korrekte Format bringen: 5 Stellen, eine Nachkommastelle (-10,2)
   tmp_Chart_tp_delta = tmp_Chart_tp_delta + "'" + buffer + "'";                      // Den Sensorwert an den temporären Datenstream anhängen
   return true;                                                                       // Rückgabewert: alles gut gelaufen
+}
+//----------------------------------------------------------------------------------------------
 
-} //----------------------------------------------------------------------------------------------
-
-bool test_Taupunkt_1() //--------------------------------------- Taupunkt 1  testen
-{
+//--------------------------------------- Taupunkt 1  testen
+bool test_Taupunkt_1() {
   char buffer[6];
   Watchdog_reset(); // Watchdog zurücksetzen
   if (isnan(Taupunkt_1) or (Taupunkt_1 < -50) or (Taupunkt_1 > 60)) {
@@ -231,11 +239,11 @@ bool test_Taupunkt_1() //--------------------------------------- Taupunkt 1  tes
   dtostrf(Taupunkt_1, 5, 1, buffer);                                           // Den Sensorwert in das korrekte Format bringen: 5 Stellen, eine Nachkommastelle (-10,2)
   tmp_Chart_tp_in = tmp_Chart_tp_in + "'" + buffer + "'";                      // Den Sensorwert an den temporären Datenstream anhängen
   return true;                                                                 // Rückgabewert: alles gut gelaufen
+}
+//------------------------------------------------------------------------------------------
 
-} //------------------------------------------------------------------------------------------
-
-bool test_Taupunkt_2() //--------------------------------------- Taupunkt 2 testen
-{
+//--------------------------------------- Taupunkt 2 testen
+bool test_Taupunkt_2() {
   char buffer[6];
   Watchdog_reset(); // Watchdog zurücksetzen
   if (isnan(Taupunkt_2) or (Taupunkt_2 < -50) or (Taupunkt_2 > 60)) {
@@ -251,10 +259,11 @@ bool test_Taupunkt_2() //--------------------------------------- Taupunkt 2 test
   dtostrf(Taupunkt_2, 5, 1, buffer);                                             // Den Sensorwert in das korrekte Format bringen: 5 Stellen, eine Nachkommastelle (-10,2)
   tmp_Chart_tp_out = tmp_Chart_tp_out + "'" + buffer + "'";                      // Den Sensorwert an den temporären Datenstream anhängen
   return true;                                                                   // Rückgabewert: alles gut gelaufen
-} //-----------------------------------------------------------------------------------------
+}
+//-----------------------------------------------------------------------------------------
 
-bool test_lz() //--------------------------------------- Lüfterzeit testen
-{
+//--------------------------------------- Lüfterzeit testen
+bool test_lz() {
   char buffer[6];
   int LZ_in_Min = Luefter_Laufzeit / 60000;
   Watchdog_reset(); // Watchdog zurücksetzen
@@ -275,10 +284,11 @@ bool test_lz() //--------------------------------------- Lüfterzeit testen
     Luefter_Start = millis(); // Lüfter Laufzeit zurücksetzen
   }
   return true; // Rückgabewert: alles gut gelaufen
-} //-----------------------------------------------------------------------------------------
+}
+//-----------------------------------------------------------------------------------------
 
-bool test_lzR() //--------------------------------------- Radon Lüfterzeit testen
-{
+//--------------------------------------- Radon Lüfterzeit testen
+bool test_lzR() {
   char buffer[6];
   int LZ_in_Min = Luefter_Laufzeit_Radon / 60000;
   Watchdog_reset(); // Watchdog zurücksetzen
@@ -299,9 +309,10 @@ bool test_lzR() //--------------------------------------- Radon Lüfterzeit test
     Luefter_Radon_Start = millis(); // Lüfter Laufzeit zurücksetzen
   }
   return true; // Rückgabewert: alles gut gelaufen
+}
+//-----------------------------------------------------------------------------------------
 
-} //-----------------------------------------------------------------------------------------
-
+/*
 bool load_TimeDate() {
   String buffer = "";
   Watchdog_reset();
@@ -345,8 +356,58 @@ bool load_TimeDate() {
 
   return true;
 }
+*/
+
+bool load_TimeDate() {
+  String buffer = "";
+  Watchdog_reset();
+  if (!LittleFS.begin(true)) {
+    Serial_Debugging_println(F("An Error has occurred while mounting LittleFS"));
+    Fehler_speichern(120);
+    return false;
+  }
+
+  File file = LittleFS.open(fileDateTime);
+  if (!file) {
+    if (ext_debug == true) {
+      Serial_Debugging_println("Failed to open file for reading: " + String(fileDateTime));
+      Fehler_speichern(121);
+      OLED_Zeile_loeschen(3);
+      OLED_println("Fehler: fileDateTime", 3, 0);
+      OLED_update();
+    }
+    return false;
+  }
+
+  if (file.size() < Chart_TimeDate_length) {
+    file.close(); // WICHTIG: Datei muss vor dem Löschen geschlossen werden!
+    LittleFS.remove(fileDateTime);
+    Serial_Debugging_println("fileDateTime gelöscht");
+    OLED_Zeile_loeschen(3);
+    OLED_println("fileDateTime gelöscht", 3, 0);
+    OLED_update();
+    return false;
+  }
+
+  Anzahl_Werte = (file.size() + 1) / Chart_TimeDate_length;
+  Serial_Debugging_println(String(fileDateTime) + ":(" + String(Anzahl_Werte) + ")...");
+  OLED_Zeile_loeschen(3);
+  OLED_println("Lade: fileDateTime", 3, 0);
+  OLED_println("Anzahl Werte: " + String(Anzahl_Werte) + "  ", 4, 0);
+  OLED_update();
+
+  while (file.available()) {
+    buffer = buffer + char(file.read());
+  }
+
+  file.close();
+  Chart_TimeDate = buffer;
+
+  return true;
+}
 //--------------------------------------------------------------------------------------------------------------------------------------------------
 
+/*
 String load_Datensatz(String name) {
   String buffer = "";
   Watchdog_reset();
@@ -395,7 +456,93 @@ String load_Datensatz(String name) {
 
   return buffer;
 }
+*/
+
+bool exists_Datensatz(String name) {
+  if (!LittleFS.begin()) {
+    if (ext_debug == true) {
+      Serial_Debugging_println(F("An Error has occurred while mounting LittleFS"));
+      Fehler_speichern(122);
+    }
+    return false;
+  }
+
+  File file = LittleFS.open(name);
+
+  // ERST prüfen, ob das Öffnen erfolgreich war!
+  if (!file) {
+    if (ext_debug == true) {
+      Serial_Debugging_println("Failed to open file for reading: " + name);
+      Fehler_speichern(123);
+    }
+    return false;
+  }
+
+  return true;
+}
+
+String load_Datensatz(String name) {
+  String buffer = "";
+  Watchdog_reset();
+
+  if (!LittleFS.begin()) {
+    Serial_Debugging_println(F("An Error has occurred while mounting LittleFS"));
+    Fehler_speichern(122);
+    return "";
+  }
+
+  File file = LittleFS.open(name);
+
+  // ERST prüfen, ob das Öffnen erfolgreich war!
+  if (!file) {
+    if (ext_debug == true) {
+      Serial_Debugging_println("Failed to open file for reading: " + name);
+      Fehler_speichern(123);
+      OLED_Zeile_loeschen(3);
+      OLED_println("Fehler: " + name, 3, 0);
+      OLED_update();
+    }
+    return "";
+  }
+
+  // JETZT erst mit der geöffneten Datei arbeiten
+  if ((file.size()) < 7) {
+    if (ext_debug == true) {
+      Serial_Debugging_println("file.size < 7: " + name);
+      Fehler_speichern(130);
+    }
+    file.close(); // WICHTIG: Vor dem Return schließen!
+    return "";
+  }
+
+  if (file.size() < laenge_Datensatz) {
+    file.close(); // WICHTIG: Muss vor dem Entfernen geschlossen sein, sonst greift "Has open FD"!
+    LittleFS.remove(name);
+    if (ext_debug == true) {
+      Serial_Debugging_println("file.size < " + String(laenge_Datensatz) + ": Remove " + name);
+      OLED_Zeile_loeschen(3);
+      OLED_println("fileDateTime gelöscht", 3, 0);
+    }
+    return "";
+  }
+
+  Anzahl_Werte = (file.size() + 1) / laenge_Datensatz;
+  Serial_Debugging_println(name + ":(" + String(Anzahl_Werte) + ")...");
+  OLED_Zeile_loeschen(3);
+  OLED_println("Lade: " + name, 3, 0);
+  OLED_println("Anzahl Werte: " + String(Anzahl_Werte) + "  ", 4, 0);
+  OLED_update();
+
+  while (file.available()) {
+    buffer = buffer + char(file.read());
+  }
+
+  file.close();
+  return buffer;
+}
 //--------------------------------------------------------------------------------------------------------------------------------------------------
+
+/*
 bool write_LittleFS(String name, String daten) {
   Watchdog_reset();
   OLED_clear();
@@ -435,6 +582,61 @@ bool write_LittleFS(String name, String daten) {
 
   return true;
 }
+*/
+
+bool write_LittleFS(String name, String daten) {
+  Watchdog_reset();
+  OLED_clear();
+  OLED_println("Sensordaten speichern", 0, 0);
+
+  if (!LittleFS.begin()) {
+    Serial_Debugging_println("An Error has occurred while mounting LittleFS");
+    Fehler_speichern(124);
+    OLED_Zeile_loeschen(3);
+    OLED_println("Fehler mount LittleFS", 3, 0);
+    OLED_update();
+
+    return false;
+  }
+
+  File file = LittleFS.open(name, FILE_WRITE);
+
+  // ERST prüfen, ob das Öffnen erfolgreich war!
+  if (!file) {
+    Serial_Debugging_println("Failed to open file for writing: " + name);
+    Fehler_speichern(123); // Ggf. eigenen Fehlercode vergeben
+    OLED_Zeile_loeschen(3);
+    OLED_println("Fehler: " + name, 3, 0);
+    OLED_update();
+    return false;
+  }
+
+  OLED_Zeile_loeschen(3);
+  OLED_println("write:" + name, 3, 0);
+  OLED_update();
+
+  if (file.print(daten)) {
+    // Erfolgreich geschrieben -> Datei unbedingt schließen!
+    file.close();
+  } else {
+    Serial_Debugging_print("Fehler beim Schreiben der Datei " + name + " in den LittleFS");
+    Fehler_speichern(125);
+    OLED_Zeile_loeschen(3);
+    OLED_println("Fehler: " + name, 3, 0);
+    OLED_update();
+
+    file.close(); // WICHTIG: Auch im Fehlerfall beim Schreiben schließen!
+    return false;
+  }
+
+  Serial_Debugging_println(name + " erfolgreich gespeichert.");
+  OLED_Zeile_loeschen(3);
+  OLED_println("Ok:" + name, 3, 0);
+  OLED_update();
+
+  return true;
+}
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------
 
 unsigned int LittleFS_print_space() {
@@ -510,6 +712,12 @@ bool load_Chronik_from_LittleFS() {
     Watchdog_reset();
     n++;
   }
+
+  if (HTML_processor_is_working == true) {
+    Serial_Debugging_println(F("Warnung: HTML_processor_is_working blockiert, erzwinge Laden..."));
+    HTML_processor_is_working = false; // Zur Not freigeben
+  }
+
   if (HTML_processor_is_working == false) {
     if (!LittleFS.begin()) {
       Serial_Debugging_println(F("An Error has occurred while mounting LittleFS"));
@@ -541,17 +749,28 @@ bool load_Chronik_from_LittleFS() {
 //--------------------------------------------------------------------------------------------------------------------------------------------------
 
 bool chronik_update_all() {
+
+  if (chronik_is_busy) {
+    return false;
+  }
+
   if (Datenspeicher > 0) // Datenspeicherung findet nur statt, wenn die Konstante "Datenspeicherung" mit einer Zahl > 0 belegt ist
   {
+
     if (last_save == 0) {
       // Setze last_save so weit in die Vergangenheit,
       // dass der erste Schreibvorgang sofort stattfindet (sofern die RTC bereit ist)
       if (rtc.getEpoch() > chronik_interval) {
-        last_save = rtc.getEpoch() - chronik_interval - 1;
+        if (exists_Datensatz("/temp_in.txt")) {
+          last_save = rtc.getEpoch();
+        } else {
+          last_save = rtc.getEpoch() - chronik_interval - 1;
+        }
       } else {
         return false; // RTC hat noch keine gültige Zeit
       }
     } // wurde die chronik_update_all schon einmal ausgeführt?
+
     if (HTML_processor_is_working == false) // Überschneidungen mit dem Server zu verhindern
     {
       if (last_save + chronik_interval < rtc.getEpoch()) // wie lange ist die letzte Datenspeicherung her?
@@ -600,6 +819,7 @@ bool chronik_update_all() {
           Fehler_speichern(509);
           return false;
         } //-------------------------------------- Radon Lüfterzeit testen
+
         // --------------------- Jetzt werden die Datenstreams gespeichert --------------------------------
         write_LittleFS(fileDateTime, tmp_Chart_TimeDate);
         write_LittleFS("/temp_in.txt", tmp_Chart_temp_in);
@@ -611,6 +831,7 @@ bool chronik_update_all() {
         write_LittleFS("/tp_out.txt", tmp_Chart_tp_out);
         write_LittleFS("/lz.txt", tmp_Chart_lz);
         write_LittleFS("/lzR.txt", tmp_Chart_lzR);
+
         // --------------------------------- Datenstreams aktualisieren ----------------------------------
         Chart_TimeDate = tmp_Chart_TimeDate;
         Chart_temp_in = tmp_Chart_temp_in;

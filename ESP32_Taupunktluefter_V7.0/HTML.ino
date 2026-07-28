@@ -18,7 +18,7 @@ static const char index_html[] PROGMEM = R"rawliteral(
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width,initial-scale=1">
  <link rel="icon" href="data:,">
- <title>TauPunktLüfter</title>
+ <title>TauPunktLüfter - TPL</title>
   
 <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3"></script>
@@ -188,6 +188,7 @@ char Daten[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
 <html>
 <head>
+ <title>TauPunktLüfter - Daten</title>
  <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
  <style>
@@ -275,6 +276,7 @@ char Daten_Datei[] PROGMEM = R"rawliteral(
 char Optionen[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
  <head>
+  <title>TauPunktLüfter - Optionen</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
  <style>
@@ -323,6 +325,7 @@ char Speicher[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
 <html>
  <head>
+  <title>TauPunktLüfter - Speicher</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
  <style>
@@ -363,6 +366,7 @@ char Fehler[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
 <html>
  <head>
+  <title>TauPunktLüfter - Fehler</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
  <style>

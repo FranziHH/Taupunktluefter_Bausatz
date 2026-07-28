@@ -12,9 +12,16 @@
 - der Code ist weiterhin in der ArduinoIDE kompilierbar (zum jetztigen Zeitpunkt 27.07.2026) können die Bibliotheken und Boards auf den aktuellen Stand gebracht werden
 - für meinen Test habe ich DHT11 Sensoren genutzt (dies ist auch in der config.h einstellbar)
 - aus diesem [Fork von djtilo-ol](https://github.com/djtilo-ol/Taupunktluefter_Bausatz/tree/patch-1) ist der Json Endpunkt übernommen
-- beim Neustart werden die Daten sofort geschrieben, bisher wurden die Daten erstmalig nach 1 Stunde geschrieben
 - Code neu formatiert ...
 
+<hr>
+
+- Bei der Anzeige der Optionen im HTML WiFi Passwort maskiert
+- Erhebliche Fehler im Dateihandling behoben (Files wurden im Fehlerfall nicht geschlossen und haben den weiteren Verlauf blockiert)
+- massive Logikfehler beim Erstellen und Lesen der Datenfiles
+    - die Dateilänge war jeweils um ein Zeichen falsch, es wurde der erste Datensatz immer gelöscht! (der erste Datensatz hat kein Komma!)
+    - der erste Datensatz wurde nicht direkt gespeichert, sondern erst nach einer Stunde
+    - das Ergebnis: erst nach mehr als einer Stunde wurde in den Charts überhaupt etwas angezeigt, das ist doch sehr verwirrend
 
 ## original README
 

@@ -12,22 +12,27 @@ void Serial_Debugging_println(String f) {
     Serial.println(f);
   }
 }
+
 void Serial_Debugging_println_and_wait(String f, int t) {
   if (debugging == true) {
     Serial.println(f);
   }
 }
+
 void Serial_Debugging_print(String f) {
   if (debugging == true) {
     Serial.print(f);
   }
 }
+
 void Serial_Debugging_write(char c) {
   if (debugging == true) {
     Serial.write(c);
   }
 }
+
 //-----------------------------------------------------------------------------------------------------------
+
 void TONE(int Frequenz, int Dauer) {
   tone(Tone_pin, Frequenz); // 1000 Hz Ton an
   delay(Dauer);             // warten...
@@ -84,6 +89,7 @@ void Stack_Size() {
     Serial.printf("Free Stack at actual position is: %d \r\n", (uint32_t)&SpActual - (uint32_t)StackPtrEnd);
   }
 }
+
 //-----------------------------------------------------------------------------------------------------------
 
 void delay_Timer(String Text, int interval) {
@@ -100,17 +106,20 @@ void delay_Timer(String Text, int interval) {
   }
   Serial.println(" fertig!");
 }
+
 //-----------------------------------------------------------------------------------------------------------
+
 /*
-void soft_reset(byte Timeout)
-{
+void soft_reset(byte Timeout) {
   for (Timeout; Timeout > 0; Timeout--)
   {
     Serial.println(" Neustart wird in " + String(Timeout) + " Sekunden ausgeführt");
     delay(1000);
   }
   ESP.restart();
-}*/
+}
+*/
+
 //-------------------------------------------
 
 void soft_reset(byte Timeout) {
@@ -131,12 +140,14 @@ void soft_reset(byte Timeout) {
   OLED_update();
   ESP.restart();
 }
+
 //-----------------------------------------------------------------------------------------------------------
 
 void print_Core_task_is_running(String Hinweistext) //-Ermittelt, auf welchem Core die aktuelle Task läuft
 {
   Serial.println(Hinweistext + "Core-" + String(xPortGetCoreID()));
 }
+
 //-----------------------------------------------------------------------------------------------------------
 
 void WiFiEvent(WiFiEvent_t event) {
