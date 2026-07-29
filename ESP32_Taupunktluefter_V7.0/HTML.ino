@@ -255,7 +255,7 @@ char Daten[] PROGMEM = R"rawliteral(
 
  <script>
  function clearData(){if (confirm("Möchtest du wirklich alle Daten löschen?")){fetch('/cleardata').then(response => {location.reload();}).catch(err => console.log('Fehler beim Löschen:', err));}}
- function restartESP(){fetch('/restart');document.body.innerHTML= `<div style="text-align:center;margin-top:50px;font-family:sans-serif;"><h1>ESP startet neu...</h1><p>Bitte ca. 15 Sekunden warten, die Seite lädt dann neu.</p></div>`;
+ function restartESP(){fetch('/restart');document.body.innerHTML= `<div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;"><div style="width: 96%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);"><div style="text-align:center;margin-top:50px;font-family:sans-serif;"><h1>ESP startet neu...</h1><p>Bitte ca. 15 Sekunden warten, die Seite lädt dann neu.</p></div></div></div>`;
     setTimeout(() => {window.location.href = "/";},15000);
 } </script>
 </body>

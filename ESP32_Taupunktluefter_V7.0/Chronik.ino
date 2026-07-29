@@ -403,6 +403,10 @@ bool load_TimeDate() {
   file.close();
   Chart_TimeDate = buffer;
 
+  if (ext_debug == true) {
+    Serial_Debugging_println("Chart TimeDate: " + String(Chart_TimeDate));
+  }
+
   return true;
 }
 //--------------------------------------------------------------------------------------------------------------------------------------------------
@@ -748,6 +752,50 @@ bool load_Chronik_from_LittleFS() {
 }
 //--------------------------------------------------------------------------------------------------------------------------------------------------
 
+unsigned long get_last_save() {
+  int day, month, year, hour, minute;
+
+  String letzterDatensatz = "";
+  if (Chart_TimeDate.length() > 0) {
+    int letztesKomma = Chart_TimeDate.lastIndexOf(',');
+    if (letztesKomma != -1) {
+      // Alles nach dem letzten Komma ausschneiden und Leerzeichen/Anführungszeichen entfernen falls nötig
+      letzterDatensatz = Chart_TimeDate.substring(letztesKomma + 1);
+      letzterDatensatz.trim(); // Entfernt führende/folgende Leerzeichen oder Zeilenumbrüche
+    } else {
+      // Falls es nur einen einzigen Datensatz ohne Komma gibt
+      letzterDatensatz = Chart_TimeDate;
+      letzterDatensatz.trim();
+    }
+
+    letzterDatensatz.replace("'", "");
+
+    // String parsen (Format: TT.MM.JJ HH:MM)
+    if (sscanf(letzterDatensatz.c_str(), "%d.%d.%d %d:%d", &day, &month, &year, &hour, &minute) == 5) {
+      struct tm t = {0};
+      t.tm_mday = day;
+      t.tm_mon = month - 1;   // Monate von 0 bis 11
+      t.tm_year = year + 100; // Zweistelliges Jahr (26 -> 2026, da tm_year ab 1900 zählt)
+      t.tm_hour = hour;
+      t.tm_min = minute;
+      t.tm_sec = 0;
+
+      time_t epochTime = mktime(&t);
+      if (epochTime != -1) {
+        // if (ext_debug == true) {
+        Serial_Debugging_println("get_last_save: " + String(letzterDatensatz) + " (" + String(epochTime) + ")");
+        // }
+        return (unsigned long)epochTime;
+      }
+    }
+  }
+
+  // if (ext_debug == true) {
+  Serial_Debugging_println("get_last_save: 0");
+  // }
+  return 0;
+}
+
 bool chronik_update_all() {
 
   if (chronik_is_busy) {
@@ -758,8 +806,10 @@ bool chronik_update_all() {
   {
 
     if (last_save == 0) {
-      // Setze last_save so weit in die Vergangenheit,
-      // dass der erste Schreibvorgang sofort stattfindet (sofern die RTC bereit ist)
+      last_save = get_last_save();
+    }
+
+    if (last_save == 0) {
       if (rtc.getEpoch() > chronik_interval) {
         if (exists_Datensatz("/temp_in.txt")) {
           last_save = rtc.getEpoch();

@@ -23,6 +23,13 @@
     - der erste Datensatz wurde nicht direkt gespeichert, sondern erst nach einer Stunde
     - das Ergebnis: erst nach mehr als einer Stunde wurde in den Charts überhaupt etwas angezeigt, das ist doch sehr verwirrend
 
+<hr>
+
+- das Design aller Websites an die Startseite angepasst
+- Last Save wird aus den bereits gespeicherten Daten ermittelt, so dass auch nach einem Neustart das Speicherintervall erhalten bleibt
+- im Source Ordner /Firmware ist die jeweils aktuell compilierte Firmware vorhanden
+    - *-Full.bin ist für einen kompletten Neu Flash gedacht
+
 ## original README
 
 ![GitHub Logo](http://www.heise.de/make/icons/make_logo.png)
