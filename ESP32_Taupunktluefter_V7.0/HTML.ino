@@ -18,7 +18,7 @@ static const char index_html[] PROGMEM = R"rawliteral(
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width,initial-scale=1">
  <link rel="icon" href="data:,">
- <title>TauPunktLüfter - TPL</title>
+ <title>TauPunktLüfter</title>
   
 <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3"></script>
@@ -59,25 +59,33 @@ static const char index_html[] PROGMEM = R"rawliteral(
 <body>
 
 <div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
- <div style="display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-  <h1 style="margin:0;color:#007bff;font-size:2.0rem;letter-spacing:2px;">   TAUPUNKTLÜFTER   </h1>
+ <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+  <h1 style="margin:0;color:#007bff;font-size:2.0rem;letter-spacing:2px;">TAUPUNKTLÜFTER</h1>
   <div style="margin-top:5px;font-size:1.1rem;color:#666;font-weight:bold;letter-spacing:1px;">
    Software-Version %Version%
 </div></div></div>
- <p style="margin: 0 0 5px 0;font-weight:bold;color:#333;text-align:center;">Letztes Daten-Update: %Stamp%</p>
 
-<table class="data-table">
- <tr><td class="lbl-in">Innen</td><td class="lbl-out">Außen</td></tr>
- <tr><td colspan="2" class="row-header">Temperatur:</td></tr>
- <tr><td class="val-in">%T1% &deg;C</td><td class="val-out">%T2% &deg;C</td></tr>
- <tr><td colspan="2" class="row-header">Luftfeuchtigkeit:</td></tr>
- <tr><td class="val-in">%H1% %%</td><td class="val-out">%H2% %%</td></tr>
- <tr><td colspan="2" class="row-header">Taupunkt:</td></tr>
- <tr><td class="val-in">%TP1% &deg;C</td><td class="val-out">%TP2% &deg;C</td></tr>
- <tr><td colspan="2" class="row-header" style="text-align:center;">&#916 TP: %DeltaTP% &deg;C</td></tr>
- <tr><td colspan="2" class="status-row" style="background:%Color-1%;">%Rel%</td></tr>
- %Radonfeld%
-</table>  
+<div style="text-align:center;margin-top:0px;margin-bottom:30px;font-family:Arial,sans-serif;">
+ <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+  <div style="margin-top: 8px; margin-bottom:8px;">
+    <div style="display: table; margin: 0 auto; text-align: left;">
+      <p style="margin: 0 0 5px 0;font-weight:bold;color:#333;text-align:center;">Letztes Daten-Update: %Stamp%</p>
+
+      <table class="data-table" style="white-space: nowrap;">
+      <tr><td class="lbl-in">Innen</td><td class="lbl-out">Außen</td></tr>
+      <tr><td colspan="2" class="row-header">Temperatur:</td></tr>
+      <tr><td class="val-in">%T1% &deg;C</td><td class="val-out">%T2% &deg;C</td></tr>
+      <tr><td colspan="2" class="row-header">Luftfeuchtigkeit:</td></tr>
+      <tr><td class="val-in">%H1% %%</td><td class="val-out">%H2% %%</td></tr>
+      <tr><td colspan="2" class="row-header">Taupunkt:</td></tr>
+      <tr><td class="val-in">%TP1% &deg;C</td><td class="val-out">%TP2% &deg;C</td></tr>
+      <tr><td colspan="2" class="row-header" style="text-align:center;">&#916 TP: %DeltaTP% &deg;C</td></tr>
+      <tr><td colspan="2" class="status-row" style="background:%Color-1%;">%Rel%</td></tr>
+      %Radonfeld%
+      </table>  
+    </div>
+ </div> 
+</div></div></div>
 
 <div class="chart-wrapper">
  <button class="zoom-btn" onclick="chart1.resetZoom()">Zoom Zur&uumlcksetzen</button>
@@ -208,26 +216,33 @@ char Daten[] PROGMEM = R"rawliteral(
  </style>
 </head>
 <body>
-<div style="line-height: 1.1;">
-  <font size="6"><b>TauPunktL&uuml;fter</b></font>
-  <font size="4"><b>%Version%</b></font><br>  
+<div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
+ <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+  <h1 style="margin:0;color:#007bff;font-size:2.0rem;letter-spacing:2px;">TAUPUNKTLÜFTER - Daten</h1>
+  <div style="margin-top:5px;font-size:1.1rem;color:#666;font-weight:bold;letter-spacing:1px;">
+   Software-Version %Version%
+</div></div></div>
+<div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
+ <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
   <div style="margin-top: 8px; margin-bottom:8px;">
-  <font size="5"><b>Daten</b></font>
-  <p>
-  Datum/Zeit: %Chart_Anzahl_Werte_Date% (%LDZ% byte)<br> %Chart_TimeDate%<br><br>
-  Innentemperatur: %Chart_Anzahl_Werte_ti% (%L% byte)<br> %Chart_temp_in%<br><br>
-  Au&szlig;entemperatur: %Chart_Anzahl_Werte_ta% (%L% byte)<br> %Chart_temp_out%<br><br>
-  Luftfeuchte innen: %Chart_Anzahl_Werte_hi% (%L% byte)<br> %Chart_air_in%<br><br>
-  Luftfeuchte au&szlig;en: %Chart_Anzahl_Werte_ha% (%L% byte)<br> %Chart_air_out%<br><br>
-  Taupunkt innen: %Chart_Anzahl_Werte_tpi% (%L% byte)<br> %Chart_tp_in%<br><br>
-  Taupunkt au&szlig;en: %Chart_Anzahl_Werte_tpa% (%L% byte)<br> %Chart_tp_out%<br><br>
-  Delta Taupunkt: %Chart_Anzahl_Werte_tpd% (%L% byte)<br> %Chart_tp_delta%<br><br>
-  L&uuml;fter Laufzeit: %Chart_Anzahl_Werte_lz% (%L% byte)<br> %Chart_Luefter%<br><br>
-  Radonsignal: %Chart_Anzahl_Werte_lzR% (%L% byte)<br> %Chart_LuefterR%<br><br>
+    <div style="display: table; margin: 0 auto; text-align: left; font-family: monospace; font-size: 1.0rem;">
+      Datum/Zeit: %Chart_Anzahl_Werte_Date% (%LDZ% byte)<br> %Chart_TimeDate%<br><br>
+      Innentemperatur: %Chart_Anzahl_Werte_ti% (%L% byte)<br> %Chart_temp_in%<br><br>
+      Au&szlig;entemperatur: %Chart_Anzahl_Werte_ta% (%L% byte)<br> %Chart_temp_out%<br><br>
+      Luftfeuchte innen: %Chart_Anzahl_Werte_hi% (%L% byte)<br> %Chart_air_in%<br><br>
+      Luftfeuchte au&szlig;en: %Chart_Anzahl_Werte_ha% (%L% byte)<br> %Chart_air_out%<br><br>
+      Taupunkt innen: %Chart_Anzahl_Werte_tpi% (%L% byte)<br> %Chart_tp_in%<br><br>
+      Taupunkt au&szlig;en: %Chart_Anzahl_Werte_tpa% (%L% byte)<br> %Chart_tp_out%<br><br>
+      Delta Taupunkt: %Chart_Anzahl_Werte_tpd% (%L% byte)<br> %Chart_tp_delta%<br><br>
+      L&uuml;fter Laufzeit: %Chart_Anzahl_Werte_lz% (%L% byte)<br> %Chart_Luefter%<br><br>
+      Radonsignal: %Chart_Anzahl_Werte_lzR% (%L% byte)<br> %Chart_LuefterR%<br><br>
+    </div>
+ </div> 
+ <div style="margin-top: 20px;">
   <button class="btn restart-btn" onclick="restartESP()">ESP Neustart</button>
   <button class="btn data-btn" onclick="clearData()">Daten l&oumlschen</button> 
-  </p>   
- </div>
+  </div>
+</div></div></div>
 
  <!-- Navigationsleiste -->
  <nav class="bottom-nav">
@@ -295,16 +310,24 @@ char Optionen[] PROGMEM = R"rawliteral(
 
 </head>
 <body>
-<div style="line-height: 1.1;">
-  <font size="6"><b>TauPunktL&uuml;fter</b></font>
-  <font size="4"><b>%Version%</b></font><br>  
+<div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
+ <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+  <h1 style="margin:0;color:#007bff;font-size:2.0rem;letter-spacing:2px;">TAUPUNKTLÜFTER - Optionen</h1>
+  <div style="margin-top:5px;font-size:1.1rem;color:#666;font-weight:bold;letter-spacing:1px;">
+   Software-Version %Version%
+</div></div></div>
+<div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
+ <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
   <div style="margin-top: 8px; margin-bottom:8px;">
-  <font size="5"><b>Optionen</b></font>
-  <table class="MsoTableGrid" border="1" cellspacing="3" cellpadding="0">
-    %Optionen_String%
-  </table>
+    <div style="display: table; margin: 0 auto; text-align: left; font-family: monospace; font-size: 1.0rem;">
+     %Optionen_String%
+    </div>
  </div> 
+ <div style="margin-top: 20px;">
     <button class="btn pref-btn" onclick="clearPrefs()">Alle Optionen l&oumlschen</button>
+  </div>
+</div></div></div>
+
   <!-- Navigationsleiste -->
  <nav class="bottom-nav">
   <a href="/" class="nav-item">TPL</a>
@@ -340,14 +363,20 @@ char Speicher[] PROGMEM = R"rawliteral(
 </head> 
 
 <body>
-<div style="line-height: 1.1;">
-  <font size="6"><b>TauPunktL&uuml;fter</b></font>
-  <font size="4"><b>%Version%</b></font><br>  
+<div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
+ <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+  <h1 style="margin:0;color:#007bff;font-size:2.0rem;letter-spacing:2px;">TAUPUNKTLÜFTER - Speicher</h1>
+  <div style="margin-top:5px;font-size:1.1rem;color:#666;font-weight:bold;letter-spacing:1px;">
+   Software-Version %Version%
+</div></div></div>
+<div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
+ <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
   <div style="margin-top: 8px; margin-bottom:8px;">
-  <font size="5"><b>Speicher</b></font>
-  <pre>%SpeicherString%</pre>
-  </div>
-</div>
+    <div style="display: table; margin: 0 auto; text-align: left; font-family: monospace; font-size: 1.0rem;">
+    %SpeicherString%
+    </div>
+ </div> 
+</div></div></div>
 
  <!-- Navigationsleiste -->
   <nav class="bottom-nav">
@@ -381,21 +410,26 @@ char Fehler[] PROGMEM = R"rawliteral(
 </head> 
 <body>
 
-<div style="line-height: 1.1;">
-  <font size="6"><b>TauPunktL&uuml;fter</b></font>
-  <font size="4"><b>%Version%</b></font><br>  
+<div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
+ <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+  <h1 style="margin:0;color:#007bff;font-size:2.0rem;letter-spacing:2px;">TAUPUNKTLÜFTER - Fehler</h1>
+  <div style="margin-top:5px;font-size:1.1rem;color:#666;font-weight:bold;letter-spacing:1px;">
+   Software-Version %Version%
+</div></div></div>
+<div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
+ <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
   <div style="margin-top: 8px; margin-bottom:8px;">
-  <font size="5"><b>Fehlerliste</b></font>
+    <div style="display: table; margin: 0 auto; text-align: left; font-family: monospace; font-size: 1.0rem;">
+    %Fehler%
+   <p>--- ENDE ---</p>
+    </div>
+ </div> 
+ <div style="margin-top: 20px;">
   <button style="padding:5px 12px;background:#f0ad4e;border:none;border-radius:4px;color:white;font-weight:bold;margin-left:10px;cursor:pointer;"onclick="clearLog()">
    Log l&ouml;schen
   </button>
   </div>
-</div>
-
- <div align="left">
-  <pre id="log">%Fehler%</pre>
-   --- ENDE ---
- </div>
+</div></div></div>
 
   <!-- Navigationsleiste -->
  <nav class="bottom-nav">
