@@ -32,7 +32,6 @@
 
 String Software_version = "7.0.1";
 #define Hostname "TPL-V7.0"
-// #define use_OLED true
 
 // Dieser Code benötig zwingend die folgenden Libraries:
 #include "LittleFS.h"
@@ -73,7 +72,6 @@ ESP32Time rtc;
 String stamp; // Variable für den Zeitstempel.
 
 //************************************** WIFI ***************************************************************
-// #define laenge_Zeichenfolge 36    //35 Zeichen und /0
 bool DHCP = true;
 char ssid[laenge_Zeichenfolge];
 char password[laenge_Zeichenfolge];
@@ -225,14 +223,9 @@ bool rel = false;
 bool fehler = true;
 volatile char focus;
 //************************************** Sensoren **********************************************************
-/*
-  #define DHTTYPE_1 DHT11           // DHT 22
-  #define DHTTYPE_2 DHT11           // DHT 22
-*/
 DHT dht1(DHTPIN_1, DHTTYPE_1);                         // Der Innensensor wird ab jetzt mit dht1 angesprochen
 DHT dht2(DHTPIN_2, DHTTYPE_2);                         // Der Außensensor wird ab jetzt mit dht2 angesprochen
 float t1, h1, t2, h2, Taupunkt_1, Taupunkt_2, DeltaTP; // Variablen für die Sensor und Taupunktwerte
-
 // ***************************   Korrekturwerte der einzelnen Sensoren*****  ********************************
 float Korrektur_t_1 = 0; // Korrekturwert Innensensor Temperatur
 float Korrektur_t_2 = 0; // Korrekturwert Außensensor Temperatur
@@ -351,9 +344,9 @@ void setup() {
     WIFI_Connect(); // WIFI-Verbindung herstellen und Server starten
   }
 
-  if (ext_debug == true) {
+  #if EXT_DEBUG == true
     print_Reset_reason(0); // Zur Fehlersuche: Warum ist der ESP gerade neu gestartet?
-  }
+  #endif
 
   //--------------------------------------------- Sensoren starten ------------------------------------------------------------------------
   dht1.begin();

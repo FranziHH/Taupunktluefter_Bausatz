@@ -38,7 +38,7 @@ static const char index_html[] PROGMEM = R"rawliteral(
  .status-row{color:white;font-size:20pt;font-weight:bold;text-align:center;padding:15px;}
     
 /* Chart Layout */
- .chart-wrapper{width:95%%;max-width:95%%; margin: 0 auto 50px;background:white;padding:15px;border:2px solid blue;border-radius:15px;box-sizing:border-box;position:relative;box-shadow: 0 4px 10px rgba(0,0,0,0.1);}
+ .chart-wrapper{width:95%%;max-width:95%%; margin: 0 auto 50px;background:white;padding:15px;border:2px solid #007bff;border-radius:15px;box-sizing:border-box;position:relative;box-shadow: 0 4px 10px rgba(0,0,0,0.1);}
  .chart-header{display:flex;align-items:center;justify-content:center;width:100%%;margin-bottom:12px; height:45px}
  .chart-title{font-size:1.2rem;color:#0000FF;background-color:#E6F0FF;padding:6px 22px;border-radius:50px;border:2px solid #0000FF; margin: 0;}
     
@@ -66,7 +66,7 @@ static const char index_html[] PROGMEM = R"rawliteral(
 </div></div></div>
 
 <div style="text-align:center;margin-top:0px;margin-bottom:30px;font-family:Arial,sans-serif;">
- <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+ <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border: 2px solid #007bff; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
   <div style="margin-top: 8px; margin-bottom:8px;">
     <div style="display: table; margin: 0 auto; text-align: left;">
       <p style="margin: 0 0 5px 0;font-weight:bold;color:#333;text-align:center;">Letztes Daten-Update: %Stamp%</p>
@@ -223,7 +223,7 @@ char Daten[] PROGMEM = R"rawliteral(
    Software-Version %Version%
 </div></div></div>
 <div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
- <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+ <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border: 2px solid #007bff; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
   <div style="margin-top: 8px; margin-bottom:8px;">
     <div style="display: table; margin: 0 auto; text-align: left; font-family: monospace; font-size: 1.0rem;">
       Datum/Zeit: %Chart_Anzahl_Werte_Date% (%LDZ% byte)<br> %Chart_TimeDate%<br><br>
@@ -317,7 +317,7 @@ char Optionen[] PROGMEM = R"rawliteral(
    Software-Version %Version%
 </div></div></div>
 <div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
- <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+ <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border: 2px solid #007bff; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
   <div style="margin-top: 8px; margin-bottom:8px;">
     <div style="display: table; margin: 0 auto; text-align: left; font-family: monospace; font-size: 1.0rem;">
      %Optionen_String%
@@ -370,7 +370,7 @@ char Speicher[] PROGMEM = R"rawliteral(
    Software-Version %Version%
 </div></div></div>
 <div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
- <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+ <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border: 2px solid #007bff; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
   <div style="margin-top: 8px; margin-bottom:8px;">
     <div style="display: table; margin: 0 auto; text-align: left; font-family: monospace; font-size: 1.0rem;">
     %SpeicherString%
@@ -417,7 +417,7 @@ char Fehler[] PROGMEM = R"rawliteral(
    Software-Version %Version%
 </div></div></div>
 <div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
- <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+ <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border: 2px solid #007bff; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
   <div style="margin-top: 8px; margin-bottom:8px;">
     <div style="display: table; margin: 0 auto; text-align: left; font-family: monospace; font-size: 1.0rem;">
     %Fehler%

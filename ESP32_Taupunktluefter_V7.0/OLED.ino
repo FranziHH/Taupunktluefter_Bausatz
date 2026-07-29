@@ -38,21 +38,21 @@ void drawSonderzeichen(byte index, bool invers) {
 
 //-----------------------------------------------------------------------------------------------------------
 void OLED_update() {
-  if (use_OLED == true) {
+  if (USE_OLED == true) {
     oled.update();
   }
 }
 //-----------------------------------------------------------------------------------------------------------
 
 void OLED_clear() {
-  if (use_OLED == true) {
+  if (USE_OLED == true) {
     oled.clear();
   }
 }
 //-----------------------------------------------------------------------------------------------------------
 
 void OLED_init() {
-  if (use_OLED == true) {
+  if (USE_OLED == true) {
     Wire.begin(I2C_SDA, I2C_SCL, 100000); // Mögliche Werte für Geschwindigkeit (Hz): 800000, 400000, 100000
     oled.init();
     oled.setScale(1);
@@ -62,7 +62,7 @@ void OLED_init() {
 }
 //-----------------------------------------------------------------------------------------------------------
 void OLED_Zeile_loeschen(byte Zeilennummer) {
-  if (use_OLED == true) {
+  if (USE_OLED == true) {
     OLED_setCursor(Zeilennummer, 0);
     for (byte i = 0; i < 20; i++) {
       oled.print(' ');
@@ -72,14 +72,14 @@ void OLED_Zeile_loeschen(byte Zeilennummer) {
 
 //-----------------------------------------------------------------------------------------------------------
 void OLED_setCursor(byte Zeile, byte Spalte) {
-  if (use_OLED == true) {
+  if (USE_OLED == true) {
     oled.setCursor((Spalte * 6), Zeile);
   }
 }
 
 //-----------------------------------------------------------------------------------------------------------
 void OLED_print_char(char c, byte Zeile, byte Spalte) {
-  if (use_OLED == true) {
+  if (USE_OLED == true) {
     OLED_setCursor(Zeile, Spalte);
     oled.print(c);
   }
@@ -87,7 +87,7 @@ void OLED_print_char(char c, byte Zeile, byte Spalte) {
 //-----------------------------------------------------------------------------------------------------------
 
 void OLED_println(String Text, byte Zeile, byte Spalte) {
-  if (use_OLED == true) {
+  if (USE_OLED == true) {
     //    Bildschirmgröße in Zeichen:
     //    Zeile: 0 - 7
     //    Spalte 0 - 20
@@ -107,14 +107,14 @@ void OLED_println(String Text, byte Zeile, byte Spalte) {
 //-----------------------------------------------------------------------------------------------------------
 
 void OLED_print(String Text) {
-  if (use_OLED == true) {
+  if (USE_OLED == true) {
     oled.print(Text);
   }
 }
 //-----------------------------------------------------------------------------------------------------------
 
 void show_Kontaktbildschirm() {
-  if (use_OLED == true) {
+  if (USE_OLED == true) {
     oled.invertText(false);
     oled.setScale(1);
     OLED_clear();
@@ -134,7 +134,7 @@ void show_Kontaktbildschirm() {
 }
 
 void show_Wertebildschirm() {
-  if (use_OLED == true) {
+  if (USE_OLED == true) {
     char buffer_1[6];
     char buffer_2[6];
     OLED_clear();
@@ -192,7 +192,7 @@ void show_Wertebildschirm() {
 //-----------------------------------------------------------------------------------------------------------
 
 void show_Status() {
-  if (use_OLED == true) {
+  if (USE_OLED == true) {
     OLED_clear();
     OLED_println("- Status Seite -", 0, 2);
     if (use_WIFI == true) {
@@ -230,7 +230,7 @@ void show_Status() {
 
 //-----------------------------------------------------------------------------------------------------------
 void Print_zurueck(byte zeile, bool inverse) {
-  if (use_OLED == true) {
+  if (USE_OLED == true) {
     OLED_println("     zur", zeile, 2);
     if (inverse) {
       drawSonderzeichen(2, true);
@@ -266,7 +266,7 @@ const unsigned char Taupunt_bitmap[] PROGMEM = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 void OLED_Draw_Bitmap() {
-  if (use_OLED == true) {
+  if (USE_OLED == true) {
     oled.clear();
     oled.drawBitmap(0, 0, Taupunt_bitmap, 128, 64);
     oled.update();
@@ -274,7 +274,7 @@ void OLED_Draw_Bitmap() {
 }
 
 void OLED_Draw_Logo() {
-  if (use_OLED == true) {
+  if (USE_OLED == true) {
     oled.clear();
     oled.invertText(false);
     OLED_println("Taupunktl", 7, 0);

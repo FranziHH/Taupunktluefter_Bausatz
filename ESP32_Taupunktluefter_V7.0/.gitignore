@@ -6,3 +6,4 @@ config.h_*
 config.h.private
 notes.txt
 firmware/*Private*
+platformio_override.*

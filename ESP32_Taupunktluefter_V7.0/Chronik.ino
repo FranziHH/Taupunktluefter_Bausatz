@@ -312,7 +312,6 @@ bool test_lzR() {
 }
 //-----------------------------------------------------------------------------------------
 
-/*
 bool load_TimeDate() {
   String buffer = "";
   Watchdog_reset();
@@ -324,58 +323,13 @@ bool load_TimeDate() {
 
   File file = LittleFS.open(fileDateTime);
   if (!file) {
-    Serial_Debugging_println(F("Failed to open file for reading: fileDateTime"));
-    Fehler_speichern(121);
-    OLED_Zeile_loeschen(3);
-    OLED_println("Fehler: fileDateTime", 3, 0);
-    OLED_update();
-
-    return false;
-  } else {
-    if (file.size() < Chart_TimeDate_length) {
-      LittleFS.remove(fileDateTime);
-      OLED_Zeile_loeschen(3);
-      OLED_println("fileDateTime gelöscht", 3, 0);
-      return false;
-    }
-
-    Anzahl_Werte = (file.size() + 1) / Chart_TimeDate_length;
-    Serial_Debugging_println("/FDT.txt:(" + String(Anzahl_Werte) + ")...");
-    OLED_Zeile_loeschen(3);
-    OLED_println("Lade: fileDateTime", 3, 0);
-    OLED_println("Anzahl Werte: " + String(Anzahl_Werte) + "  ", 4, 0);
-    OLED_update();
-
-    while (file.available()) {
-      buffer = buffer + char(file.read());
-    }
-
-    file.close();
-    Chart_TimeDate = buffer;
-  }
-
-  return true;
-}
-*/
-
-bool load_TimeDate() {
-  String buffer = "";
-  Watchdog_reset();
-  if (!LittleFS.begin(true)) {
-    Serial_Debugging_println(F("An Error has occurred while mounting LittleFS"));
-    Fehler_speichern(120);
-    return false;
-  }
-
-  File file = LittleFS.open(fileDateTime);
-  if (!file) {
-    if (ext_debug == true) {
+    #if EXT_DEBUG == true
       Serial_Debugging_println("Failed to open file for reading: " + String(fileDateTime));
       Fehler_speichern(121);
       OLED_Zeile_loeschen(3);
       OLED_println("Fehler: fileDateTime", 3, 0);
       OLED_update();
-    }
+    #endif
     return false;
   }
 
@@ -403,71 +357,20 @@ bool load_TimeDate() {
   file.close();
   Chart_TimeDate = buffer;
 
-  if (ext_debug == true) {
+  #if EXT_DEBUG == true
     Serial_Debugging_println("Chart TimeDate: " + String(Chart_TimeDate));
-  }
+  #endif
 
   return true;
 }
 //--------------------------------------------------------------------------------------------------------------------------------------------------
 
-/*
-String load_Datensatz(String name) {
-  String buffer = "";
-  Watchdog_reset();
-
-  if (!LittleFS.begin()) {
-    Serial_Debugging_println(F("An Error has occurred while mounting LittleFS"));
-    Fehler_speichern(122);
-    return "";
-  }
-
-  File file = LittleFS.open(name);
-  if ((file.size()) < 7) {
-    Fehler_speichern(130);
-    return "";
-  }
-
-  if (!file) {
-    Serial_Debugging_println("Failed to open file for reading: " + name);
-    Fehler_speichern(123);
-    OLED_Zeile_loeschen(3);
-    OLED_println("Fehler: " + name, 3, 0);
-    OLED_update();
-
-    return "";
-  } else {
-    if (file.size() < laenge_Datensatz) {
-      LittleFS.remove(name);
-      OLED_Zeile_loeschen(3);
-      OLED_println("fileDateTime gelöscht", 3, 0);
-      return "";
-    }
-
-    Anzahl_Werte = (file.size() + 1) / laenge_Datensatz;
-    Serial_Debugging_println(name + ":(" + String(Anzahl_Werte) + ")...");
-    OLED_Zeile_loeschen(3);
-    OLED_println("Lade: " + name, 3, 0);
-    OLED_println("Anzahl Werte: " + String(Anzahl_Werte) + "  ", 4, 0);
-    OLED_update();
-
-    while (file.available()) {
-      buffer = buffer + char(file.read());
-    }
-
-    file.close();
-  }
-
-  return buffer;
-}
-*/
-
 bool exists_Datensatz(String name) {
   if (!LittleFS.begin()) {
-    if (ext_debug == true) {
+    #if EXT_DEBUG == true
       Serial_Debugging_println(F("An Error has occurred while mounting LittleFS"));
       Fehler_speichern(122);
-    }
+    #endif
     return false;
   }
 
@@ -475,10 +378,10 @@ bool exists_Datensatz(String name) {
 
   // ERST prüfen, ob das Öffnen erfolgreich war!
   if (!file) {
-    if (ext_debug == true) {
+    #if EXT_DEBUG == true
       Serial_Debugging_println("Failed to open file for reading: " + name);
       Fehler_speichern(123);
-    }
+    #endif
     return false;
   }
 
@@ -499,22 +402,22 @@ String load_Datensatz(String name) {
 
   // ERST prüfen, ob das Öffnen erfolgreich war!
   if (!file) {
-    if (ext_debug == true) {
+    #if EXT_DEBUG == true
       Serial_Debugging_println("Failed to open file for reading: " + name);
       Fehler_speichern(123);
       OLED_Zeile_loeschen(3);
       OLED_println("Fehler: " + name, 3, 0);
       OLED_update();
-    }
+    #endif
     return "";
   }
 
   // JETZT erst mit der geöffneten Datei arbeiten
   if ((file.size()) < 7) {
-    if (ext_debug == true) {
+    #if EXT_DEBUG == true
       Serial_Debugging_println("file.size < 7: " + name);
       Fehler_speichern(130);
-    }
+    #endif
     file.close(); // WICHTIG: Vor dem Return schließen!
     return "";
   }
@@ -522,11 +425,11 @@ String load_Datensatz(String name) {
   if (file.size() < laenge_Datensatz) {
     file.close(); // WICHTIG: Muss vor dem Entfernen geschlossen sein, sonst greift "Has open FD"!
     LittleFS.remove(name);
-    if (ext_debug == true) {
+    #if EXT_DEBUG == true
       Serial_Debugging_println("file.size < " + String(laenge_Datensatz) + ": Remove " + name);
       OLED_Zeile_loeschen(3);
       OLED_println("fileDateTime gelöscht", 3, 0);
-    }
+    #endif
     return "";
   }
 
@@ -545,48 +448,6 @@ String load_Datensatz(String name) {
   return buffer;
 }
 //--------------------------------------------------------------------------------------------------------------------------------------------------
-
-/*
-bool write_LittleFS(String name, String daten) {
-  Watchdog_reset();
-  OLED_clear();
-  OLED_println("Sensordaten speichern", 0, 0);
-
-  if (!LittleFS.begin()) {
-    Serial_Debugging_println("An Error has occurred while mounting LittleFS");
-    Fehler_speichern(124);
-    OLED_Zeile_loeschen(3);
-    OLED_println("Fehler mount LittleFS", 3, 0);
-    OLED_update();
-
-    return false;
-  }
-
-  File file = LittleFS.open(name, FILE_WRITE);
-  OLED_Zeile_loeschen(3);
-  OLED_println("write:" + name, 3, 0);
-  OLED_update();
-
-  if (file.print(daten)) {
-  } else {
-    Serial_Debugging_print("Fehler beim Schreiben der Datei " + name + " in den LittleFS");
-    Fehler_speichern(125);
-    OLED_Zeile_loeschen(3);
-    OLED_println("Fehler: " + name, 3, 0);
-    OLED_update();
-
-    return false;
-  }
-
-  file.close();
-  Serial_Debugging_println(name + " erfolgreich gespeichert.");
-  OLED_Zeile_loeschen(3);
-  OLED_println("Ok:" + name, 3, 0);
-  OLED_update();
-
-  return true;
-}
-*/
 
 bool write_LittleFS(String name, String daten) {
   Watchdog_reset();
@@ -667,7 +528,9 @@ bool remove_LittleFS(String name) {
   }
   return LittleFS.remove(name);
 }
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------
+
 bool format_LittleFS_kurz() {
   if (!LittleFS.format()) {
     Fehler_speichern(129);
@@ -679,7 +542,7 @@ bool format_LittleFS_kurz() {
 
 bool format_LittleFS() {
   Serial_Debugging_println(F("Formatiere LittleFS ...."));
-  if (use_OLED == true) {
+  if (USE_OLED == true) {
     OLED_clear();
     OLED_println(F("Formatiere LittleFS"), 2, 0);
     OLED_println(F("Bitte warten..."), 4, 0);
@@ -688,7 +551,7 @@ bool format_LittleFS() {
 
   bool formatted = LittleFS.format();
   if (formatted) {
-    if (use_OLED == true) {
+    if (USE_OLED == true) {
       OLED_clear();
       OLED_println("Erfolgreich!", 4, 0);
       OLED_update();
@@ -696,7 +559,7 @@ bool format_LittleFS() {
 
     Serial_Debugging_println("\n\nSuccess formatting");
   } else {
-    if (use_OLED == true) {
+    if (USE_OLED == true) {
       OLED_clear();
       OLED_println("Fehler aufgetreten!", 4, 0);
       OLED_update();
@@ -752,33 +615,6 @@ bool load_Chronik_from_LittleFS() {
 }
 //--------------------------------------------------------------------------------------------------------------------------------------------------
 
-unsigned long calculate_utc_epoch(int year, int month, int day, int hour, int minute, int second) {
-  // Tage pro Monat (ohne Schaltjahr-Korrektur im Februar)
-  const int days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
-  unsigned long days = 0;
-
-  // Tage seit 1970 bis zum Beginn des aktuellen Jahres berechnen
-  for (int y = 1970; y < year; ++y) {
-    days += ((y % 4 == 0 && y % 100 != 0) || (y % 400 == 0)) ? 366 : 365;
-  }
-
-  // Tage der vergangenen Monate des aktuellen Jahres addieren
-  for (int m = 1; m < month; ++m) {
-    days += days_in_month[m - 1];
-    // Schaltjahr-Tag im Februar hinzufügen
-    if (m == 2 && ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0))) {
-      days += 1;
-    }
-  }
-
-  // Vergangene Tage des aktuellen Monats addieren (abzüglich des laufenden Tages)
-  days += (day - 1);
-
-  // Gesamte Sekunden berechnen
-  return (days * 86400UL) + (hour * 3600UL) + (minute * 60UL) + second;
-}
-
 unsigned long get_last_save() {
   int day, month, year, hour, minute;
 
@@ -812,17 +648,17 @@ unsigned long get_last_save() {
       time_t epochTime = mktime(&t);
 
       if (epochTime != -1) {
-        if (ext_debug == true) {
+        #if EXT_DEBUG == true
           Serial_Debugging_println("get_last_save: " + String(letzterDatensatz) + " (" + String(epochTime) + ")");
-        }
+        #endif
         return (unsigned long)epochTime;
       }
     }
   }
 
-  if (ext_debug == true) {
+  #if EXT_DEBUG == true
     Serial_Debugging_println("get_last_save: 0");
-  }
+  #endif
   return 0;
 }
 
@@ -851,11 +687,11 @@ bool chronik_update_all() {
       }
     } // wurde die chronik_update_all schon einmal ausgeführt?
 
-    if (ext_debug == true) {
+    #if EXT_DEBUG == true
       Serial_Debugging_println("last_save: " + String(last_save));
       Serial_Debugging_println("last_save + chronik_interval: " + String(last_save + chronik_interval));
       Serial_Debugging_println("rtc.getEpoch: " + String(rtc.getEpoch()));
-    }
+    #endif
 
     if (HTML_processor_is_working == false) // Überschneidungen mit dem Server zu verhindern
     {
