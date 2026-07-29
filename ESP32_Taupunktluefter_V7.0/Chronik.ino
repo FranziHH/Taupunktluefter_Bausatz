@@ -752,6 +752,33 @@ bool load_Chronik_from_LittleFS() {
 }
 //--------------------------------------------------------------------------------------------------------------------------------------------------
 
+unsigned long calculate_utc_epoch(int year, int month, int day, int hour, int minute, int second) {
+  // Tage pro Monat (ohne Schaltjahr-Korrektur im Februar)
+  const int days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+  unsigned long days = 0;
+
+  // Tage seit 1970 bis zum Beginn des aktuellen Jahres berechnen
+  for (int y = 1970; y < year; ++y) {
+    days += ((y % 4 == 0 && y % 100 != 0) || (y % 400 == 0)) ? 366 : 365;
+  }
+
+  // Tage der vergangenen Monate des aktuellen Jahres addieren
+  for (int m = 1; m < month; ++m) {
+    days += days_in_month[m - 1];
+    // Schaltjahr-Tag im Februar hinzufügen
+    if (m == 2 && ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0))) {
+      days += 1;
+    }
+  }
+
+  // Vergangene Tage des aktuellen Monats addieren (abzüglich des laufenden Tages)
+  days += (day - 1);
+
+  // Gesamte Sekunden berechnen
+  return (days * 86400UL) + (hour * 3600UL) + (minute * 60UL) + second;
+}
+
 unsigned long get_last_save() {
   int day, month, year, hour, minute;
 
@@ -780,19 +807,22 @@ unsigned long get_last_save() {
       t.tm_min = minute;
       t.tm_sec = 0;
 
+      t.tm_isdst = -1; // -> Sommerzeit ermitteln
+
       time_t epochTime = mktime(&t);
+
       if (epochTime != -1) {
-        // if (ext_debug == true) {
-        Serial_Debugging_println("get_last_save: " + String(letzterDatensatz) + " (" + String(epochTime) + ")");
-        // }
+        if (ext_debug == true) {
+          Serial_Debugging_println("get_last_save: " + String(letzterDatensatz) + " (" + String(epochTime) + ")");
+        }
         return (unsigned long)epochTime;
       }
     }
   }
 
-  // if (ext_debug == true) {
-  Serial_Debugging_println("get_last_save: 0");
-  // }
+  if (ext_debug == true) {
+    Serial_Debugging_println("get_last_save: 0");
+  }
   return 0;
 }
 
@@ -820,6 +850,12 @@ bool chronik_update_all() {
         return false; // RTC hat noch keine gültige Zeit
       }
     } // wurde die chronik_update_all schon einmal ausgeführt?
+
+    if (ext_debug == true) {
+      Serial_Debugging_println("last_save: " + String(last_save));
+      Serial_Debugging_println("last_save + chronik_interval: " + String(last_save + chronik_interval));
+      Serial_Debugging_println("rtc.getEpoch: " + String(rtc.getEpoch()));
+    }
 
     if (HTML_processor_is_working == false) // Überschneidungen mit dem Server zu verhindern
     {
