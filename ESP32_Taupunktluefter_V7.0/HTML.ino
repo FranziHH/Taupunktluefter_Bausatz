@@ -226,16 +226,16 @@ char Daten[] PROGMEM = R"rawliteral(
  <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border: 2px solid #007bff; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
   <div style="margin-top: 8px; margin-bottom:8px;">
     <div style="display: table; margin: 0 auto; text-align: left; font-family: monospace; font-size: 1.0rem;">
-      Datum/Zeit: %Chart_Anzahl_Werte_Date% (%LDZ% byte)<br> %Chart_TimeDate%<br><br>
-      Innentemperatur: %Chart_Anzahl_Werte_ti% (%L% byte)<br> %Chart_temp_in%<br><br>
-      Au&szlig;entemperatur: %Chart_Anzahl_Werte_ta% (%L% byte)<br> %Chart_temp_out%<br><br>
-      Luftfeuchte innen: %Chart_Anzahl_Werte_hi% (%L% byte)<br> %Chart_air_in%<br><br>
-      Luftfeuchte au&szlig;en: %Chart_Anzahl_Werte_ha% (%L% byte)<br> %Chart_air_out%<br><br>
-      Taupunkt innen: %Chart_Anzahl_Werte_tpi% (%L% byte)<br> %Chart_tp_in%<br><br>
-      Taupunkt au&szlig;en: %Chart_Anzahl_Werte_tpa% (%L% byte)<br> %Chart_tp_out%<br><br>
-      Delta Taupunkt: %Chart_Anzahl_Werte_tpd% (%L% byte)<br> %Chart_tp_delta%<br><br>
-      L&uuml;fter Laufzeit: %Chart_Anzahl_Werte_lz% (%L% byte)<br> %Chart_Luefter%<br><br>
-      Radonsignal: %Chart_Anzahl_Werte_lzR% (%L% byte)<br> %Chart_LuefterR%<br><br>
+      Datum/Zeit: %Chart_Anzahl_Werte_Date% (%LDZ% byte)<br> %Data_TimeDate%<br><br>
+      Innentemperatur: %Chart_Anzahl_Werte_ti% (%L% byte)<br> %Data_temp_in%<br><br>
+      Au&szlig;entemperatur: %Chart_Anzahl_Werte_ta% (%L% byte)<br> %Data_temp_out%<br><br>
+      Luftfeuchte innen: %Chart_Anzahl_Werte_hi% (%L% byte)<br> %Data_air_in%<br><br>
+      Luftfeuchte au&szlig;en: %Chart_Anzahl_Werte_ha% (%L% byte)<br> %Data_air_out%<br><br>
+      Taupunkt innen: %Chart_Anzahl_Werte_tpi% (%L% byte)<br> %Data_tp_in%<br><br>
+      Taupunkt au&szlig;en: %Chart_Anzahl_Werte_tpa% (%L% byte)<br> %Data_tp_out%<br><br>
+      Delta Taupunkt: %Chart_Anzahl_Werte_tpd% (%L% byte)<br> %Data_tp_delta%<br><br>
+      L&uuml;fter Laufzeit: %Chart_Anzahl_Werte_lz% (%L% byte)<br> %Data_Luefter%<br><br>
+      Radonsignal: %Chart_Anzahl_Werte_lzR% (%L% byte)<br> %Data_LuefterR%<br><br>
     </div>
  </div> 
  <div style="margin-top: 20px;">
@@ -452,24 +452,24 @@ char Fehler[] PROGMEM = R"rawliteral(
 )rawliteral";
 
 String formatChartData(String rawValues, int interval) {
-    String formattedResult = "";
-    int commaCount = 0;
-    int lastIndex = 0;
-    
-    for (int i = 0; i < rawValues.length(); i++) {
-        if (rawValues.charAt(i) == ',') {
-            commaCount++;
-            // Nach jedem X-ten Komma (hier z.B. alle 5) ein <br> einfügen
-            if (commaCount % interval == 0) {
-                formattedResult += rawValues.substring(lastIndex, i + 1);
-                formattedResult += "<br>";
-                lastIndex = i + 1;
-            }
-        }
+  String formattedResult = "";
+  int commaCount = 0;
+  int lastIndex = 0;
+
+  for (int i = 0; i < rawValues.length(); i++) {
+    if (rawValues.charAt(i) == ',') {
+      commaCount++;
+      // Nach jedem X-ten Komma (hier z.B. alle 5) ein <br> einfügen
+      if (commaCount % interval == 0) {
+        formattedResult += rawValues.substring(lastIndex, i + 1);
+        formattedResult += "<br>";
+        lastIndex = i + 1;
+      }
     }
-    // Den Rest anhängen
-    formattedResult += rawValues.substring(lastIndex);
-    return formattedResult;
+  }
+  // Den Rest anhängen
+  formattedResult += rawValues.substring(lastIndex);
+  return formattedResult;
 }
 
 String processor(const String &var) {
@@ -555,9 +555,17 @@ String processor(const String &var) {
     return "";
   } else {
     if (var == "Chart_TimeDate") {
+      return Chart_TimeDate;
+    }
+    if (var == "Data_TimeDate") {
       return formatChartData(Chart_TimeDate, OUTPUT_COUNT_DATA);
     }
     if (var == "Chart_temp_in") {
+      f = Chart_temp_in;
+      f.replace(" ", "");
+      return f;
+    }
+    if (var == "Data_temp_in") {
       f = Chart_temp_in;
       f.replace(" ", "");
       return formatChartData(f, OUTPUT_COUNT_DATA);
@@ -565,9 +573,19 @@ String processor(const String &var) {
     if (var == "Chart_temp_out") {
       f = Chart_temp_out;
       f.replace(" ", "");
+      return f;
+    }
+    if (var == "Data_temp_out") {
+      f = Chart_temp_out;
+      f.replace(" ", "");
       return formatChartData(f, OUTPUT_COUNT_DATA);
     }
     if (var == "Chart_air_in") {
+      f = Chart_air_in;
+      f.replace(" ", "");
+      return f;
+    }
+    if (var == "Data_air_in") {
       f = Chart_air_in;
       f.replace(" ", "");
       return formatChartData(f, OUTPUT_COUNT_DATA);
@@ -575,14 +593,24 @@ String processor(const String &var) {
     if (var == "Chart_air_out") {
       f = Chart_air_out;
       f.replace(" ", "");
+      return f;
+    }
+    if (var == "Data_air_out") {
+      f = Chart_air_out;
+      f.replace(" ", "");
       return formatChartData(f, OUTPUT_COUNT_DATA);
     }
     if (var == "Chart_tp_in") {
       f = Chart_tp_in;
       f.replace(" ", "");
+      return f;
+    }
+    if (var == "Data_tp_in") {
+      f = Chart_tp_in;
+      f.replace(" ", "");
       return formatChartData(f, OUTPUT_COUNT_DATA);
     }
-    if (var == "Chart_tp_out") {
+    if (var == "Data_tp_out") {
       f = Chart_tp_out;
       f.replace(" ", "");
       return formatChartData(f, OUTPUT_COUNT_DATA);
@@ -590,14 +618,29 @@ String processor(const String &var) {
     if (var == "Chart_tp_delta") {
       f = Chart_tp_delta;
       f.replace(" ", "");
+      return f;
+    }
+    if (var == "Data_tp_delta") {
+      f = Chart_tp_delta;
+      f.replace(" ", "");
       return formatChartData(f, OUTPUT_COUNT_DATA);
     }
     if (var == "Chart_Luefter") {
       f = Chart_lz;
       f.replace(" ", "");
+      return f;
+    }
+    if (var == "Data_Luefter") {
+      f = Chart_lz;
+      f.replace(" ", "");
       return formatChartData(f, OUTPUT_COUNT_DATA);
     }
     if (var == "Chart_LuefterR") {
+      f = Chart_lzR;
+      f.replace(" ", "");
+      return f;
+    }
+    if (var == "Data_LuefterR") {
       f = Chart_lzR;
       f.replace(" ", "");
       return formatChartData(f, OUTPUT_COUNT_DATA);
