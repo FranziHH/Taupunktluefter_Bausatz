@@ -379,15 +379,15 @@ void serial_debugging_all() {
 
 void SpeicherGroessen() //------------------------------ Für HTML Ausgabe -------------------------
 {
-  SpeicherString = "Freier Stack - Speicher: " + String(uxTaskGetStackHighWaterMark(NULL)) + " Byte<br>";
-  SpeicherString += "Freier Flash - Speicher: " + String(ESP.getFreeHeap()) + " Byte<br>";
+  SpeicherString = "Freier Stack - Speicher...: " + String(uxTaskGetStackHighWaterMark(NULL)) + " Byte<br>";
+  SpeicherString += "Freier Flash - Speicher...: " + String(ESP.getFreeHeap()) + " Byte<br>";
   SpeicherString += "Min. freier Flash-Speicher: " + String(ESP.getMinFreeHeap()) + " Byte<br><br>";
   LittleFS.begin();
   int tBytes = LittleFS.totalBytes();
   int uBytes = LittleFS.usedBytes();
-  SpeicherString += "LittleFS.totalBytes: " + String(tBytes) + "<br>";
-  SpeicherString += "LittleFS.usedBytes: " + String(uBytes) + "<br>";
-  SpeicherString += "LittleFS.freeBytes: " + String(tBytes - uBytes) + "<br>";
+  SpeicherString += "LittleFS.totalBytes.......: " + String(tBytes) + "<br>";
+  SpeicherString += "LittleFS.usedBytes........: " + String(uBytes) + "<br>";
+  SpeicherString += "LittleFS.freeBytes........: " + String(tBytes - uBytes) + "<br>";
   SpeicherString += " das entspricht " + String((tBytes - uBytes) / (Chart_TimeDate_length + laenge_Datensatz * 7)) + " Datens&aumltze <br>";
 }
 
@@ -416,14 +416,14 @@ void SerialprintWifiStatus() {
 }
 
 void Make_WIFI_Status_String() {
-  WIFI_Status_String = "Hostname:..........: " + String(WiFi.getHostname()) + "<br>";
-  WIFI_Status_String += "IP Addresse:.......: " + String(WiFi.localIP().toString()) + "<br>";
-  WIFI_Status_String += "SSID:..................: " + WiFi.SSID() + "<br>";
-  // WIFI_Status_String += "DNS1...............: "+ WiFi.DNS1().toString() + "<br>";
-  // WIFI_Status_String += "DNS2...............: "+ WiFi.dns2().toString() + "<br>";
-  WIFI_Status_String += "Gateway IP.........: " + WiFi.gatewayIP().toString() + "<br>";
-  WIFI_Status_String += "Signalst&aumlnrke (RSSI): " + String(WiFi.RSSI()) + " dBm<br>";
-  WIFI_Status_String += "<br>============ TimeStamp ============<br>";
+  WIFI_Status_String = "Hostname..................: " + String(WiFi.getHostname()) + "<br>";
+  WIFI_Status_String += "IP Addresse...............: " + String(WiFi.localIP().toString()) + "<br>";
+  WIFI_Status_String += "SSID......................: " + WiFi.SSID() + "<br>";
+//WIFI_Status_String += "DNS1......................: "+ WiFi.DNS1().toString() + "<br>";
+//WIFI_Status_String += "DNS2......................: "+ WiFi.dns2().toString() + "<br>";
+  WIFI_Status_String += "Gateway IP................: " + WiFi.gatewayIP().toString() + "<br>";
+  WIFI_Status_String += "Signalst&aumlnrke (RSSI)......: " + String(WiFi.RSSI()) + " dBm<br>";
+  WIFI_Status_String += "<br>=============== TimeStamp ================<br>";
   make_time_stamp();
-  WIFI_Status_String += "TimeStamp..........: " + stamp;
+  WIFI_Status_String += "TimeStamp.................: " + stamp;
 }

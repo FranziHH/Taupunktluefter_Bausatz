@@ -1,7 +1,7 @@
 # Fork von Taupunktlüfter Bausatz
 
-<a href="images/IMG_20260727_101634.jpg"><img src="images/IMG_20260727_101634.jpg" width="500" alt='OLED 2.42" Display'></a>   
-<a href="images/IMG_20260727_102016.jpg"><img src="images/IMG_20260727_102016.jpg" width="500" alt='OLED 1.3" Display'></a>    
+<a href="images/IMG_20260727_101634.jpg"><img src="images/IMG_20260727_101634.jpg" width="500" title='OLED 2.42" Display' alt='OLED 2.42" Display'></a>   
+<a href="images/IMG_20260727_102016.jpg"><img src="images/IMG_20260727_102016.jpg" width="500" title='OLED 2.42" Display' alt='OLED 1.3" Display'></a>    
 
 
 ## Änderungen im Source v7.0 -> v7.0.1
@@ -29,6 +29,14 @@
 - Last Save wird aus den bereits gespeicherten Daten ermittelt, so dass auch nach einem Neustart das Speicherintervall erhalten bleibt
 - im Source Ordner /Firmware ist die jeweils aktuell compilierte Firmware vorhanden
     - *-Full.bin ist für einen kompletten Neu Flash gedacht
+
+## Screenshots Website
+
+<a href="images/TauPunktLuefter_-_2026-07-30_11.02.16.png"><img src="images/TauPunktLuefter_-_2026-07-30_11.02.16.png" width="500" title='Taupunktl&uuml;fter' alt='Taupunktl&uuml;fter'></a> 
+<a href="images/TauPunktLuefter_-_Fehler_-_2026-07-30_11.02.40.png"><img src="images/TauPunktLuefter_-_Fehler_-_2026-07-30_11.02.40.png" width="500" title='Taupunktl&uuml;fter - Fehler' alt='Taupunktl&uuml;fter - Fehler'></a> 
+<a href="images/TauPunktLuefter_-_Daten_-_2026-07-30_11.02.56.png"><img src="images/TauPunktLuefter_-_Daten_-_2026-07-30_11.02.56.png" width="500" title='Taupunktl&uuml;fter - Daten' alt='Taupunktl&uuml;fter - Daten'></a> 
+<a href="images/TauPunktLuefter_-_Speicher_-_2026-07-30_11.33.47.png"><img src="images/TauPunktLuefter_-_Speicher_-_2026-07-30_11.33.47.png" width="500" title='Taupunktl&uuml;fter - Speicher' alt='Taupunktl&uuml;fter - Speicher'></a> 
+<a href="images/TauPunktLuefter_-_Optionen_-_2026-07-30_11.03.25.png"><img src="images/TauPunktLuefter_-_Optionen_-_2026-07-30_11.03.25.png" width="500" title='Taupunktl&uuml;fter - Optionen' alt='Taupunktl&uuml;fter - Optionen'></a> 
 
 ## original README
 

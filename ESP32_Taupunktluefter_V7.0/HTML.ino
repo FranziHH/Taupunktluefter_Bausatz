@@ -640,7 +640,7 @@ String processor(const String &var) {
     return OptionenString;
   }
   if (var == "SpeicherString") {
-    return ("========= Speicher  =========<br>" + SpeicherString + "<br>==========  WIFI ===========<br>" + WIFI_Status_String);
+    return ("================ Speicher ================<br>" + SpeicherString + "<br>================= WIFI ===================<br>" + WIFI_Status_String);
   }
   if (var == "Fehler") {
     return FehlerString;
