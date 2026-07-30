@@ -17,6 +17,10 @@
 #define DHTTYPE_1 DHT22
 #define DHTTYPE_2 DHT22
 
+// Nach wievielen Datensätzen wird auf der Seite "Daten" ein Zeilenumbruch eingefügt
+// Je nachdem auf welchem Gerät die Anzeige genutzt wird, kann das Variieren
+#define OUTPUT_COUNT_DATA 5
+
 param Parameter[] = {       
 
 // Bezeichnung(max 15 Z.) Menü,   Type,   Zeichenfolge (max 21 Z.)

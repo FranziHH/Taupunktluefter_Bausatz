@@ -9,93 +9,55 @@
 #define max_size_errorlist 4200 // Länge der Fehlerliste begrenzen auf 21 byte/Fehler * 200
 
 String Get_Fehlertext_from_Nummer(int Fehlernummer) {
-  switch (Fehlernummer) {
-  case 101:
-    return (print_Reset_reason(Fehlernummer));
-  case 102:
-    return (print_Reset_reason(Fehlernummer));
-  case 103:
-    return (print_Reset_reason(Fehlernummer));
-  case 104:
-    return (print_Reset_reason(Fehlernummer));
-  case 105:
-    return (print_Reset_reason(Fehlernummer));
-  case 106:
-    return (print_Reset_reason(Fehlernummer));
-  case 107:
-    return (print_Reset_reason(Fehlernummer));
-  case 108:
-    return (print_Reset_reason(Fehlernummer));
-  case 109:
-    return (print_Reset_reason(Fehlernummer));
-  case 110:
-    return (print_Reset_reason(Fehlernummer));
-
-  case 120:
-    return (F("LittleFS: An Error has occurred while mounting LittleFS"));
-  case 121:
-    return (F("LitlteFS: Failed to open file for reading: fileDateTime"));
-  case 122:
-    return (F("LittleFS: An Error has occurred while mounting LittleFS"));
-  case 123:
-    return (F("LittleFS: Failed to open file for reading"));
-  case 124:
-    return (F("LittleFS: An Error has occurred while mounting LittleFS"));
-  case 126:
-    return (F("LittleFS: Fehler beim Schreiben der Datei ..."));
-  case 127:
-    return (F("LittleFS: An Error has occurred while mounting LittleFS"));
-  case 128:
-    return (F("LittleFS: Fehler beim öffnen der Datei /Fehler.txt"));
-  case 129:
-    return (F("LittleFS: Fehler beim Formatieren"));
-  case 130:
-    return (F("LittleFS: Datei ist leer(evtl. formatiert?)"));
-
-  case 140:
-    return (F("LittleFS: Wurde formatiert"));
-  case 141:
-    return (F("LittleFS: Wurde formatiert(kurz)"));
-
-  case 201:
-    return (F("Fehler beim Auslesen von Sensor 1 (Innen)"));
-  case 202:
-    return (F("Fehler beim Auslesen von Sensor 2 (Aussen)"));
-
-  case 300:
-    return (F("get_Local_Time: Keine Zeit ermittelt"));
-  case 301:
-    return (F("WIFI ist nicht verbunden - kein weiterer Versuch!"));
-  case 302:
-    return (F("WIFI ist unterbrochen! Versuche neu zu verbinden - Leider kein Erfolg! - ESP32 Neustart"));
-
-  case 400:
-    return (F("Radon: Der RadonLüfter läuft los"));
-  case 401:
-    return (F("Radon: Der RadonLüfter schaltet ab"));
-
-  case 500:
-    return (F("Fehler: Chronik: Datum und Zeit testen"));
-  case 501:
-    return (F("Fehler: Chronik: Innentemperatur testen"));
-  case 502:
-    return (F("Fehler: Chronik: Außentemperatur testen"));
-  case 503:
-    return (F("Fehler: Chronik: Innen-Luftfeuchte testen"));
-  case 504:
-    return (F("Fehler: Chronik: Außen-Luftfeuchte testen"));
-  case 505:
-    return (F("Fehler: Chronik: Unterschied der Taupunkte testen"));
-  case 506:
-    return (F("Fehler: Chronik: Taupunkt 1 testen"));
-  case 507:
-    return (F("Fehler: Chronik: Taupunkt 2 testen"));
-  case 508:
-    return (F("Fehler: Chronik: Lüfter_Laufzeit"));
-
-  default:
-    return ("");
+  // Wenn es sich um die Reset-Codes handelt, direkt die Funktion aufrufen
+  if (Fehlernummer >= 101 && Fehlernummer <= 110) {
+    return print_Reset_reason(Fehlernummer);
   }
+
+  const __FlashStringHelper* fehlerText = F("");
+
+  switch (Fehlernummer) {
+    // Gleiche LittleFS-Fehler zusammenfassen
+    case 120:
+    case 122:
+    case 124:
+    case 127: fehlerText = F("LittleFS: An Error has occurred while mounting LittleFS"); break;
+    
+    case 121: fehlerText = F("LitlteFS: Failed to open file for reading: fileDateTime"); break;
+    case 123: fehlerText = F("LittleFS: Failed to open file for reading"); break;
+    case 126: fehlerText = F("LittleFS: Fehler beim Schreiben der Datei ..."); break;
+    case 128: fehlerText = F("LittleFS: Fehler beim öffnen der Datei /Fehler.txt"); break;
+    case 129: fehlerText = F("LittleFS: Fehler beim Formatieren"); break;
+    case 130: fehlerText = F("LittleFS: Datei ist leer(evtl. formatiert?)"); break;
+
+    case 140: fehlerText = F("LittleFS: Wurde formatiert"); break;
+    case 141: fehlerText = F("LittleFS: Wurde formatiert(kurz)"); break;
+
+    case 201: fehlerText = F("Fehler beim Auslesen von Sensor 1 (Innen)"); break;
+    case 202: fehlerText = F("Fehler beim Auslesen von Sensor 2 (Aussen)"); break;
+
+    case 300: fehlerText = F("get_Local_Time: Keine Zeit ermittelt"); break;
+    case 301: fehlerText = F("WIFI ist nicht verbunden - kein weiterer Versuch!"); break;
+    case 302: fehlerText = F("WIFI ist unterbrochen! Versuche neu zu verbinden - Leider kein Erfolg! - ESP32 Neustart"); break;
+
+    case 400: fehlerText = F("Radon: Der RadonLüfter läuft los"); break;
+    case 401: fehlerText = F("Radon: Der RadonLüfter schaltet ab"); break;
+
+    case 500: fehlerText = F("Fehler: Chronik: Datum und Zeit testen"); break;
+    case 501: fehlerText = F("Fehler: Chronik: Innentemperatur testen"); break;
+    case 502: fehlerText = F("Fehler: Chronik: Außentemperatur testen"); break;
+    case 503: fehlerText = F("Fehler: Chronik: Innen-Luftfeuchte testen"); break;
+    case 504: fehlerText = F("Fehler: Chronik: Außen-Luftfeuchte testen"); break;
+    case 505: fehlerText = F("Fehler: Chronik: Unterschied der Taupunkte testen"); break;
+    case 506: fehlerText = F("Fehler: Chronik: Taupunkt 1 testen"); break;
+    case 507: fehlerText = F("Fehler: Chronik: Taupunkt 2 testen"); break;
+    case 508: fehlerText = F("Fehler: Chronik: Lüfter_Laufzeit"); break;
+
+    default:  return (""); // Unbekannte Nummer
+  }
+
+  // Erst ganz am Ende wird die Nummer einmal zentral vorangestellt!
+  return String(Fehlernummer) + "|" + FPSTR(fehlerText);
 }
 
 //---------------------------------------------------------------------- Fehleraufzeichnung -----------------------------
@@ -163,7 +125,6 @@ void Fehler_speichern(int Nummer) {
 void read_Fehler_from_FS() {
   char Zeichen;
   String Puffer = "";
-  String Fehlernummer;
 
   if (!LittleFS.begin()) {
     Serial_Debugging_println("Fehler: read_Fehler_from_FS()/LittleFS.begin()");
@@ -175,8 +136,20 @@ void read_Fehler_from_FS() {
         Zeichen = (char(file.read()));
         Puffer += Zeichen;
         if (Zeichen == ';') {
-          Fehlernummer = (Puffer.substring(0, 3));
-          FehlerString = FehlerString + "<br>" + (Puffer + "=>" + Get_Fehlertext_from_Nummer(Fehlernummer.toInt()));
+          Puffer.remove(Puffer.length() - 1);
+          Puffer.trim(); // Leerzeichen entfernen
+          
+          // Prüfen, ob es der Lösch-Eintrag ist
+          if (Puffer.startsWith("---")) {
+            // zB --- Protokoll gelöscht ---
+            FehlerString = FehlerString + "<br>" + Puffer;
+          } else {
+            // Normaler Fehlerdatensatz (z.B. "201-30.07.26 12:08;")
+            // Die ID sind die ersten 3 Zeichen vor dem Bindestrich
+            String Fehlernummer = Puffer.substring(0, 3);
+            String Zeitstempel = Puffer.substring(4);
+            FehlerString = FehlerString + "<br>" + Zeitstempel + " => " + Get_Fehlertext_from_Nummer(Fehlernummer.toInt());
+          }
           Puffer = "";
         }
       }

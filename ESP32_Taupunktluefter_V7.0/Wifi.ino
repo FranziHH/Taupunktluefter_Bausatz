@@ -201,7 +201,7 @@ void WIFI_Connect() {
     server.on("/clearlog", HTTP_GET, [](AsyncWebServerRequest *request) {
       File f = LittleFS.open("/Fehler.txt", "w");
       if (f) {
-        f.println("--- Protokoll gelöscht ---");
+        f.print("--- Protokoll gelöscht ---;");
         f.close();
         request->send(200, "text/plain", "Protokoll wurde geleert.");
       } else {

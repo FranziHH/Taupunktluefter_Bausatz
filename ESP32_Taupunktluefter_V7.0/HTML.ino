@@ -451,6 +451,27 @@ char Fehler[] PROGMEM = R"rawliteral(
 %Seitenende%
 )rawliteral";
 
+String formatChartData(String rawValues, int interval) {
+    String formattedResult = "";
+    int commaCount = 0;
+    int lastIndex = 0;
+    
+    for (int i = 0; i < rawValues.length(); i++) {
+        if (rawValues.charAt(i) == ',') {
+            commaCount++;
+            // Nach jedem X-ten Komma (hier z.B. alle 5) ein <br> einfügen
+            if (commaCount % interval == 0) {
+                formattedResult += rawValues.substring(lastIndex, i + 1);
+                formattedResult += "<br>";
+                lastIndex = i + 1;
+            }
+        }
+    }
+    // Den Rest anhängen
+    formattedResult += rawValues.substring(lastIndex);
+    return formattedResult;
+}
+
 String processor(const String &var) {
   static unsigned int LDZ; // Länge der Datenreihe Datum/Zeit
   static unsigned int L;   // Länge einer Datenreihe
@@ -534,52 +555,52 @@ String processor(const String &var) {
     return "";
   } else {
     if (var == "Chart_TimeDate") {
-      return Chart_TimeDate;
+      return formatChartData(Chart_TimeDate, OUTPUT_COUNT_DATA);
     }
     if (var == "Chart_temp_in") {
       f = Chart_temp_in;
       f.replace(" ", "");
-      return f;
+      return formatChartData(f, OUTPUT_COUNT_DATA);
     }
     if (var == "Chart_temp_out") {
       f = Chart_temp_out;
       f.replace(" ", "");
-      return f;
+      return formatChartData(f, OUTPUT_COUNT_DATA);
     }
     if (var == "Chart_air_in") {
       f = Chart_air_in;
       f.replace(" ", "");
-      return f;
+      return formatChartData(f, OUTPUT_COUNT_DATA);
     }
     if (var == "Chart_air_out") {
       f = Chart_air_out;
       f.replace(" ", "");
-      return f;
+      return formatChartData(f, OUTPUT_COUNT_DATA);
     }
     if (var == "Chart_tp_in") {
       f = Chart_tp_in;
       f.replace(" ", "");
-      return f;
+      return formatChartData(f, OUTPUT_COUNT_DATA);
     }
     if (var == "Chart_tp_out") {
       f = Chart_tp_out;
       f.replace(" ", "");
-      return f;
+      return formatChartData(f, OUTPUT_COUNT_DATA);
     }
     if (var == "Chart_tp_delta") {
       f = Chart_tp_delta;
       f.replace(" ", "");
-      return f;
+      return formatChartData(f, OUTPUT_COUNT_DATA);
     }
     if (var == "Chart_Luefter") {
       f = Chart_lz;
       f.replace(" ", "");
-      return f;
+      return formatChartData(f, OUTPUT_COUNT_DATA);
     }
     if (var == "Chart_LuefterR") {
       f = Chart_lzR;
       f.replace(" ", "");
-      return f;
+      return formatChartData(f, OUTPUT_COUNT_DATA);
     }
 
     if (var == "Chart_Anzahl_Werte_Date") {
