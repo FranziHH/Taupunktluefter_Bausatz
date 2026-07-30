@@ -1,7 +1,7 @@
 # Fork von Taupunktlüfter Bausatz
 
 <a href="images/IMG_20260727_101634.jpg"><img src="images/IMG_20260727_101634.jpg" width="500" title='OLED 2.42" Display' alt='OLED 2.42" Display'></a>   
-<a href="images/IMG_20260727_102016.jpg"><img src="images/IMG_20260727_102016.jpg" width="500" title='OLED 2.42" Display' alt='OLED 1.3" Display'></a>    
+<a href="images/IMG_20260727_102016.jpg"><img src="images/IMG_20260727_102016.jpg" width="500" title='OLED 1.3" Display' alt='OLED 1.3" Display'></a>    
 
 
 ## Änderungen im Source v7.0 -> v7.0.1
