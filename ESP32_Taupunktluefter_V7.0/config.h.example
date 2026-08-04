@@ -20,6 +20,7 @@
 // Nach wievielen Datensätzen wird auf der Seite "Daten" ein Zeilenumbruch eingefügt
 // Je nachdem auf welchem Gerät die Anzeige genutzt wird, kann das Variieren
 #define OUTPUT_COUNT_DATA 5
+#define OUTPUT_REMOVE_QUOTE false
 
 param Parameter[] = {       
 

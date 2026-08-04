@@ -54,13 +54,16 @@ static const char index_html[] PROGMEM = R"rawliteral(
   .nav-item:last-child{border-right:none;}
   .nav-item:active{background-color: #1a252f;}
   .header-box{margin-bottom:20px;}pre{background:rgba(255,255,255,0.4);padding:10px;border-radius:5px;white-space:pre-wrap;word-wrap:break-word;}
+
+  a.plain-link{color: inherit;text-decoration: none;cursor: default;}
+  a.plain-link:hover {cursor: pointer;}
  </style>
 </head>
 <body>
 
 <div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
  <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-  <h1 style="margin:0;color:#007bff;font-size:2.0rem;letter-spacing:2px;">TAUPUNKTLÜFTER</h1>
+  <h1 style="margin:0;color:#007bff;font-size:2.0rem;letter-spacing:2px;"><a href="/" class="plain-link">TAUPUNKTLÜFTER</a></h1>
   <div style="margin-top:5px;font-size:1.1rem;color:#666;font-weight:bold;letter-spacing:1px;">
    Software-Version %Version%
 </div></div></div>
@@ -213,12 +216,15 @@ char Daten[] PROGMEM = R"rawliteral(
   .nav-item:last-child{border-right:none;}
   .nav-item:active{background-color: #1a252f;}
   .header-box{margin-bottom:20px;}pre{background:rgba(255,255,255,0.4);padding:10px;border-radius:5px;white-space:pre-wrap;word-wrap:break-word;}
+
+  a.plain-link{color: inherit;text-decoration: none;cursor: default;}
+  a.plain-link:hover {cursor: pointer;}
  </style>
 </head>
 <body>
 <div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
  <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-  <h1 style="margin:0;color:#007bff;font-size:2.0rem;letter-spacing:2px;">TAUPUNKTLÜFTER - Daten</h1>
+  <h1 style="margin:0;color:#007bff;font-size:2.0rem;letter-spacing:2px;"><a href="/" class="plain-link">TAUPUNKTLÜFTER - Daten</a></h1>
   <div style="margin-top:5px;font-size:1.1rem;color:#666;font-weight:bold;letter-spacing:1px;">
    Software-Version %Version%
 </div></div></div>
@@ -306,13 +312,16 @@ char Optionen[] PROGMEM = R"rawliteral(
   .content { text-align: left; }
   .btn {color:white; border:none; padding:10px 20px;cursor:pointer;border-radius:4px;margin-right:5px;text-decoration:none;display:inline-block;}
   .pref-btn {background-color:#ff4c4c;}   /* Rot für Preferences */
+
+  a.plain-link{color: inherit;text-decoration: none;cursor: default;}
+  a.plain-link:hover {cursor: pointer;}
  </style>
 
 </head>
 <body>
 <div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
  <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-  <h1 style="margin:0;color:#007bff;font-size:2.0rem;letter-spacing:2px;">TAUPUNKTLÜFTER - Optionen</h1>
+  <h1 style="margin:0;color:#007bff;font-size:2.0rem;letter-spacing:2px;"><a href="/" class="plain-link">TAUPUNKTLÜFTER - Optionen</a></h1>
   <div style="margin-top:5px;font-size:1.1rem;color:#666;font-weight:bold;letter-spacing:1px;">
    Software-Version %Version%
 </div></div></div>
@@ -359,13 +368,15 @@ char Speicher[] PROGMEM = R"rawliteral(
   .nav-item:last-child{border-right:none;}
   .nav-item:active{background-color:#1a252f;}
   .header-box{margin-bottom:20px;}pre{background:rgba(255,255,255,0.4);padding:10px;border-radius:5px;white-space:pre-wrap;word-wrap:break-word;}
+  a.plain-link{color: inherit;text-decoration: none;cursor: default;}
+  a.plain-link:hover {cursor: pointer;}
   </style>
 </head> 
 
 <body>
 <div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
  <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-  <h1 style="margin:0;color:#007bff;font-size:2.0rem;letter-spacing:2px;">TAUPUNKTLÜFTER - Speicher</h1>
+  <h1 style="margin:0;color:#007bff;font-size:2.0rem;letter-spacing:2px;"><a href="/" class="plain-link">TAUPUNKTLÜFTER - Speicher</a></h1>
   <div style="margin-top:5px;font-size:1.1rem;color:#666;font-weight:bold;letter-spacing:1px;">
    Software-Version %Version%
 </div></div></div>
@@ -406,13 +417,15 @@ char Fehler[] PROGMEM = R"rawliteral(
   .nav-item:last-child{border-right:none;}
   .nav-item:active{background-color: #1a252f;}
   .header-box{margin-bottom:10px;}pre{background:rgba(255,255,255,0.4);padding:5px;border-radius:5px;white-space:pre;overflow-x: auto; font-size:10pt;padding:0 2px;}
+  a.plain-link{color: inherit;text-decoration: none;cursor: default;}
+  a.plain-link:hover {cursor: pointer;}
  </style>
 </head> 
 <body>
 
 <div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
  <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-  <h1 style="margin:0;color:#007bff;font-size:2.0rem;letter-spacing:2px;">TAUPUNKTLÜFTER - Fehler</h1>
+  <h1 style="margin:0;color:#007bff;font-size:2.0rem;letter-spacing:2px;"><a href="/" class="plain-link">TAUPUNKTLÜFTER - Fehler</a></h1>
   <div style="margin-top:5px;font-size:1.1rem;color:#666;font-weight:bold;letter-spacing:1px;">
    Software-Version %Version%
 </div></div></div>
@@ -469,6 +482,9 @@ String formatChartData(String rawValues, int interval) {
   }
   // Den Rest anhängen
   formattedResult += rawValues.substring(lastIndex);
+  if (OUTPUT_REMOVE_QUOTE == true) {
+    formattedResult.replace("'", "");
+  }
   return formattedResult;
 }
 
