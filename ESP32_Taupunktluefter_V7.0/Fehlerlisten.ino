@@ -23,8 +23,20 @@ String Get_Fehlertext_from_Nummer(int Fehlernummer) {
     case 124:
     case 127: fehlerText = F("LittleFS: An Error has occurred while mounting LittleFS"); break;
     
-    case 121: fehlerText = F("LitlteFS: Failed to open file for reading: fileDateTime"); break;
+    case 121: fehlerText = F("LittleFS: Failed to open file for reading: Datum/Zeit"); break;
+
     case 123: fehlerText = F("LittleFS: Failed to open file for reading"); break;
+
+    case 924: fehlerText = F("LittleFS: Failed to open file for reading: Innentemperatur"); break;
+    case 925: fehlerText = F("LittleFS: Failed to open file for reading: Außentemperatur"); break;
+    case 926: fehlerText = F("LittleFS: Failed to open file for reading: Luftfeuchte innen"); break;
+    case 927: fehlerText = F("LittleFS: Failed to open file for reading: Luftfeuchte außen"); break;
+    case 928: fehlerText = F("LittleFS: Failed to open file for reading: Taupunkt innen"); break;
+    case 929: fehlerText = F("LittleFS: Failed to open file for reading: Taupunkt außen"); break;
+    case 930: fehlerText = F("LittleFS: Failed to open file for reading: Delta Taupunkt"); break;
+    case 931: fehlerText = F("LittleFS: Failed to open file for reading: Lüfter Laufzeit"); break;
+    case 932: fehlerText = F("LittleFS: Failed to open file for reading: Radonsignal"); break;
+    
     case 126: fehlerText = F("LittleFS: Fehler beim Schreiben der Datei ..."); break;
     case 128: fehlerText = F("LittleFS: Fehler beim öffnen der Datei /Fehler.txt"); break;
     case 129: fehlerText = F("LittleFS: Fehler beim Formatieren"); break;

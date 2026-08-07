@@ -171,14 +171,14 @@ void WIFI_Connect() {
       request->send(200, "multipart/form-data", Daten_Datei, processor);
     });
     //---------------------------------------------- Fehler------------------------------------------------
-    server.on("/Fehler", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server.on("/Log", HTTP_GET, [](AsyncWebServerRequest *request) {
       read_Fehler_from_FS();
       TONE(800, 300);
       Serial.print("Received request from client with IP: ");
       Serial.println(request->client()->remoteIP());
 
       HTML_processor_is_working = true;
-      Serial_Debugging_println("/Fehler/ wird angefordert");
+      Serial_Debugging_println("/Log/ wird angefordert");
 
       delay(1); // um den Watchdog zurückzusetzen
       request->send(200, "text/html", Fehler, processor);

@@ -175,7 +175,7 @@ const ctx=document.getElementById('runtimeChart').getContext('2d');
 <!-- Navigationsbalken -->
 <nav class="bottom-nav">
  <a href="/" class="nav-item">TPL</a>
- <a href="/Fehler" class="nav-item">Fehler</a>
+ <a href="/Log" class="nav-item">Log</a>
  <a href="/Daten" class="nav-item">Daten</a>
  <a href="/Speicher" class="nav-item">Speicher</a>
  <a href="/Optionen" class="nav-item">Optionen</a>
@@ -253,7 +253,7 @@ char Daten[] PROGMEM = R"rawliteral(
  <!-- Navigationsleiste -->
  <nav class="bottom-nav">
   <a href="/" class="nav-item">TPL</a>
-  <a href="/Fehler" class="nav-item">Fehler</a>
+  <a href="/Log" class="nav-item">Log</a>
   <a href="/Daten" class="nav-item">Daten</a>
   <a href="/Speicher" class="nav-item">Speicher</a>
   <a href="/Optionen" class="nav-item">Optionen</a>
@@ -340,7 +340,7 @@ char Optionen[] PROGMEM = R"rawliteral(
   <!-- Navigationsleiste -->
  <nav class="bottom-nav">
   <a href="/" class="nav-item">TPL</a>
-  <a href="/Fehler" class="nav-item">Fehler</a>
+  <a href="/Log" class="nav-item">Log</a>
   <a href="/Daten" class="nav-item">Daten</a>
   <a href="/Speicher" class="nav-item">Speicher</a>
   <a href="/Optionen" class="nav-item">Optionen</a>
@@ -392,7 +392,7 @@ char Speicher[] PROGMEM = R"rawliteral(
  <!-- Navigationsleiste -->
   <nav class="bottom-nav">
   <a href="/" class="nav-item">TPL</a>
-  <a href="/Fehler" class="nav-item">Fehler</a>
+  <a href="/Log" class="nav-item">Log</a>
   <a href="/Daten" class="nav-item">Daten</a>
   <a href="/Speicher" class="nav-item">Speicher</a>
   <a href="/Optionen" class="nav-item">Optionen</a>
@@ -407,7 +407,7 @@ char Fehler[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
 <html>
  <head>
-  <title>TauPunktLüfter - Fehler</title>
+  <title>TauPunktLüfter - Log</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
  <style>
@@ -425,7 +425,7 @@ char Fehler[] PROGMEM = R"rawliteral(
 
 <div style="text-align:center;margin-top:0px;margin-bottom:10px;font-family:Arial,sans-serif;">
  <div style="width: 95%%; min-width: 50%%; box-sizing: border-box;display:inline-block;background-color:#ffffff;padding:20px 40px;border-radius:10px;border-bottom:5px solid #007bff;box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-  <h1 style="margin:0;color:#007bff;font-size:2.0rem;letter-spacing:2px;"><a href="/" class="plain-link">TAUPUNKTLÜFTER - Fehler</a></h1>
+  <h1 style="margin:0;color:#007bff;font-size:2.0rem;letter-spacing:2px;"><a href="/" class="plain-link">TAUPUNKTLÜFTER - Log</a></h1>
   <div style="margin-top:5px;font-size:1.1rem;color:#666;font-weight:bold;letter-spacing:1px;">
    Software-Version %Version%
 </div></div></div>
@@ -447,7 +447,7 @@ char Fehler[] PROGMEM = R"rawliteral(
   <!-- Navigationsleiste -->
  <nav class="bottom-nav">
   <a href="/" class="nav-item">TPL</a>
-  <a href="/Fehler" class="nav-item">Fehler</a>
+  <a href="/Log" class="nav-item">Log</a>
   <a href="/Daten" class="nav-item">Daten</a>
   <a href="/Speicher" class="nav-item">Speicher</a>
   <a href="/Optionen" class="nav-item">Optionen</a>
@@ -464,27 +464,53 @@ char Fehler[] PROGMEM = R"rawliteral(
 %Seitenende%
 )rawliteral";
 
-String formatChartData(String rawValues, int interval) {
+String formatChartData(String rawValues, int interval, bool prefix) {
   String formattedResult = "";
   int commaCount = 0;
   int lastIndex = 0;
+  int lineIndex = 0;
+
+  auto getFormattedPrefix = [](int num) {
+    String p = String(num);
+    while (p.length() < 5) {
+      p = "0" + p;
+    }
+    return p + ": ";
+  };
+
+  // Optionales Prefix für die erste Zeile, falls der String nicht leer ist
+  if (prefix && rawValues.length() > 0) {
+    formattedResult += getFormattedPrefix(lineIndex);
+  }
 
   for (int i = 0; i < rawValues.length(); i++) {
     if (rawValues.charAt(i) == ',') {
       commaCount++;
-      // Nach jedem X-ten Komma (hier z.B. alle 5) ein <br> einfügen
       if (commaCount % interval == 0) {
-        formattedResult += rawValues.substring(lastIndex, i + 1);
-        formattedResult += "<br>";
-        lastIndex = i + 1;
+        // Prüfen, ob nach diesem Komma noch Zeichen vor dem Ende kommen
+        if (i + 1 < rawValues.length()) {
+          formattedResult += rawValues.substring(lastIndex, i + 1);
+          formattedResult += "<br>";
+          lastIndex = i + 1;
+          
+          if (prefix) {
+            lineIndex = lineIndex + interval;
+            formattedResult += getFormattedPrefix(lineIndex);
+          }
+        }
       }
     }
   }
-  // Den Rest anhängen
-  formattedResult += rawValues.substring(lastIndex);
+  
+  // Den Rest anhängen (nur wenn tatsächlich noch Daten da sind)
+  if (lastIndex < rawValues.length()) {
+    formattedResult += rawValues.substring(lastIndex);
+  }
+  
   if (OUTPUT_REMOVE_QUOTE == true) {
     formattedResult.replace("'", "");
   }
+  
   return formattedResult;
 }
 
@@ -574,7 +600,7 @@ String processor(const String &var) {
       return Chart_TimeDate;
     }
     if (var == "Data_TimeDate") {
-      return formatChartData(Chart_TimeDate, OUTPUT_COUNT_DATA);
+      return formatChartData(Chart_TimeDate, OUTPUT_COUNT_DATA, OUTPUT_PREFIX);
     }
     if (var == "Chart_temp_in") {
       f = Chart_temp_in;
@@ -584,7 +610,7 @@ String processor(const String &var) {
     if (var == "Data_temp_in") {
       f = Chart_temp_in;
       f.replace(" ", "");
-      return formatChartData(f, OUTPUT_COUNT_DATA);
+      return formatChartData(f, OUTPUT_COUNT_DATA, OUTPUT_PREFIX);
     }
     if (var == "Chart_temp_out") {
       f = Chart_temp_out;
@@ -594,7 +620,7 @@ String processor(const String &var) {
     if (var == "Data_temp_out") {
       f = Chart_temp_out;
       f.replace(" ", "");
-      return formatChartData(f, OUTPUT_COUNT_DATA);
+      return formatChartData(f, OUTPUT_COUNT_DATA, OUTPUT_PREFIX);
     }
     if (var == "Chart_air_in") {
       f = Chart_air_in;
@@ -604,7 +630,7 @@ String processor(const String &var) {
     if (var == "Data_air_in") {
       f = Chart_air_in;
       f.replace(" ", "");
-      return formatChartData(f, OUTPUT_COUNT_DATA);
+      return formatChartData(f, OUTPUT_COUNT_DATA, OUTPUT_PREFIX);
     }
     if (var == "Chart_air_out") {
       f = Chart_air_out;
@@ -614,7 +640,7 @@ String processor(const String &var) {
     if (var == "Data_air_out") {
       f = Chart_air_out;
       f.replace(" ", "");
-      return formatChartData(f, OUTPUT_COUNT_DATA);
+      return formatChartData(f, OUTPUT_COUNT_DATA, OUTPUT_PREFIX);
     }
     if (var == "Chart_tp_in") {
       f = Chart_tp_in;
@@ -624,12 +650,12 @@ String processor(const String &var) {
     if (var == "Data_tp_in") {
       f = Chart_tp_in;
       f.replace(" ", "");
-      return formatChartData(f, OUTPUT_COUNT_DATA);
+      return formatChartData(f, OUTPUT_COUNT_DATA, OUTPUT_PREFIX);
     }
     if (var == "Data_tp_out") {
       f = Chart_tp_out;
       f.replace(" ", "");
-      return formatChartData(f, OUTPUT_COUNT_DATA);
+      return formatChartData(f, OUTPUT_COUNT_DATA, OUTPUT_PREFIX);
     }
     if (var == "Chart_tp_delta") {
       f = Chart_tp_delta;
@@ -639,7 +665,7 @@ String processor(const String &var) {
     if (var == "Data_tp_delta") {
       f = Chart_tp_delta;
       f.replace(" ", "");
-      return formatChartData(f, OUTPUT_COUNT_DATA);
+      return formatChartData(f, OUTPUT_COUNT_DATA, OUTPUT_PREFIX);
     }
     if (var == "Chart_Luefter") {
       f = Chart_lz;
@@ -649,7 +675,7 @@ String processor(const String &var) {
     if (var == "Data_Luefter") {
       f = Chart_lz;
       f.replace(" ", "");
-      return formatChartData(f, OUTPUT_COUNT_DATA);
+      return formatChartData(f, OUTPUT_COUNT_DATA, OUTPUT_PREFIX);
     }
     if (var == "Chart_LuefterR") {
       f = Chart_lzR;
@@ -659,7 +685,7 @@ String processor(const String &var) {
     if (var == "Data_LuefterR") {
       f = Chart_lzR;
       f.replace(" ", "");
-      return formatChartData(f, OUTPUT_COUNT_DATA);
+      return formatChartData(f, OUTPUT_COUNT_DATA, OUTPUT_PREFIX);
     }
 
     if (var == "Chart_Anzahl_Werte_Date") {

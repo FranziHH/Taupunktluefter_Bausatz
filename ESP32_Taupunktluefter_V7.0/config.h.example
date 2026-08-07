@@ -21,6 +21,7 @@
 // Je nachdem auf welchem Gerät die Anzeige genutzt wird, kann das Variieren
 #define OUTPUT_COUNT_DATA 5
 #define OUTPUT_REMOVE_QUOTE false
+#define OUTPUT_PREFIX true
 
 param Parameter[] = {       
 

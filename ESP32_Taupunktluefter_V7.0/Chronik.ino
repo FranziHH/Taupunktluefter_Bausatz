@@ -323,13 +323,13 @@ bool load_TimeDate() {
 
   File file = LittleFS.open(fileDateTime);
   if (!file) {
-    #if EXT_DEBUG == true
-      Serial_Debugging_println("Failed to open file for reading: " + String(fileDateTime));
-      Fehler_speichern(121);
-      OLED_Zeile_loeschen(3);
-      OLED_println("Fehler: fileDateTime", 3, 0);
-      OLED_update();
-    #endif
+#if EXT_DEBUG == true
+    Serial_Debugging_println("Failed to open file for reading: " + String(fileDateTime));
+    Fehler_speichern(121);
+    OLED_Zeile_loeschen(3);
+    OLED_println("Fehler: fileDateTime", 3, 0);
+    OLED_update();
+#endif
     return false;
   }
 
@@ -357,9 +357,9 @@ bool load_TimeDate() {
   file.close();
   Chart_TimeDate = buffer;
 
-  #if EXT_DEBUG == true
-    Serial_Debugging_println("Chart TimeDate: " + String(Chart_TimeDate));
-  #endif
+#if EXT_DEBUG == true
+  Serial_Debugging_println("Chart TimeDate: " + String(Chart_TimeDate));
+#endif
 
   return true;
 }
@@ -367,10 +367,10 @@ bool load_TimeDate() {
 
 bool exists_Datensatz(String name) {
   if (!LittleFS.begin()) {
-    #if EXT_DEBUG == true
-      Serial_Debugging_println(F("An Error has occurred while mounting LittleFS"));
-      Fehler_speichern(122);
-    #endif
+#if EXT_DEBUG == true
+    Serial_Debugging_println(F("An Error has occurred while mounting LittleFS"));
+    Fehler_speichern(122);
+#endif
     return false;
   }
 
@@ -378,10 +378,9 @@ bool exists_Datensatz(String name) {
 
   // ERST prüfen, ob das Öffnen erfolgreich war!
   if (!file) {
-    #if EXT_DEBUG == true
-      Serial_Debugging_println("Failed to open file for reading: " + name);
-      Fehler_speichern(123);
-    #endif
+#if EXT_DEBUG == true
+    Serial_Debugging_println("Failed to open file for reading: " + name);
+#endif
     return false;
   }
 
@@ -402,22 +401,42 @@ String load_Datensatz(String name) {
 
   // ERST prüfen, ob das Öffnen erfolgreich war!
   if (!file) {
-    #if EXT_DEBUG == true
-      Serial_Debugging_println("Failed to open file for reading: " + name);
+#if EXT_DEBUG == true
+    Serial_Debugging_println("Failed to open file for reading: " + name);
+    if (name == "/temp_in.txt") {
+      Fehler_speichern(924);
+    } else if (name == "/air_in.txt") {
+      Fehler_speichern(925);
+    } else if (name == "/tp_in.txt") {
+      Fehler_speichern(926);
+    } else if (name == "/temp_out.txt") {
+      Fehler_speichern(927);
+    } else if (name == "/air_out.txt") {
+      Fehler_speichern(928);
+    } else if (name == "/tp_out.txt") {
+      Fehler_speichern(929);
+    } else if (name == "/tp_delta.txt") {
+      Fehler_speichern(930);
+    } else if (name == "/lz.txt") {
+      Fehler_speichern(931);
+    } else if (name == "/lzR.txt") {
+      Fehler_speichern(932);
+    } else {
       Fehler_speichern(123);
-      OLED_Zeile_loeschen(3);
-      OLED_println("Fehler: " + name, 3, 0);
-      OLED_update();
-    #endif
+    }
+    OLED_Zeile_loeschen(3);
+    OLED_println("Fehler: " + name, 3, 0);
+    OLED_update();
+#endif
     return "";
   }
 
   // JETZT erst mit der geöffneten Datei arbeiten
   if ((file.size()) < 7) {
-    #if EXT_DEBUG == true
-      Serial_Debugging_println("file.size < 7: " + name);
-      Fehler_speichern(130);
-    #endif
+#if EXT_DEBUG == true
+    Serial_Debugging_println("file.size < 7: " + name);
+    Fehler_speichern(130);
+#endif
     file.close(); // WICHTIG: Vor dem Return schließen!
     return "";
   }
@@ -425,11 +444,11 @@ String load_Datensatz(String name) {
   if (file.size() < laenge_Datensatz) {
     file.close(); // WICHTIG: Muss vor dem Entfernen geschlossen sein, sonst greift "Has open FD"!
     LittleFS.remove(name);
-    #if EXT_DEBUG == true
-      Serial_Debugging_println("file.size < " + String(laenge_Datensatz) + ": Remove " + name);
-      OLED_Zeile_loeschen(3);
-      OLED_println("fileDateTime gelöscht", 3, 0);
-    #endif
+#if EXT_DEBUG == true
+    Serial_Debugging_println("file.size < " + String(laenge_Datensatz) + ": Remove " + name);
+    OLED_Zeile_loeschen(3);
+    OLED_println("fileDateTime gelöscht", 3, 0);
+#endif
     return "";
   }
 
@@ -469,7 +488,7 @@ bool write_LittleFS(String name, String daten) {
   // ERST prüfen, ob das Öffnen erfolgreich war!
   if (!file) {
     Serial_Debugging_println("Failed to open file for writing: " + name);
-    Fehler_speichern(123); // Ggf. eigenen Fehlercode vergeben
+    Fehler_speichern(124); // Ggf. eigenen Fehlercode vergeben
     OLED_Zeile_loeschen(3);
     OLED_println("Fehler: " + name, 3, 0);
     OLED_update();
@@ -515,7 +534,7 @@ unsigned int LittleFS_print_space() {
   Serial.println(" LittleFS.totalBytes: " + String(tBytes));
   Serial.println(" LittleFS.usedBytes: " + String(uBytes));
   Serial.println(" LittleFS.freeBytes: " + String(tBytes - uBytes));
-  Serial.println(" das entspricht " + String((tBytes - uBytes) / (laenge_Datensatz * 7 + Chart_TimeDate_length)) + " Datensätze");
+  Serial.println(" das entspricht " + String((tBytes - uBytes) / (laenge_Datensatz * 7 + Chart_TimeDate_length)) + " Datensätzen");
 
   return (tBytes - uBytes);
 }
@@ -648,17 +667,17 @@ unsigned long get_last_save() {
       time_t epochTime = mktime(&t);
 
       if (epochTime != -1) {
-        #if EXT_DEBUG == true
-          Serial_Debugging_println("get_last_save: " + String(letzterDatensatz) + " (" + String(epochTime) + ")");
-        #endif
+#if EXT_DEBUG == true
+        Serial_Debugging_println("get_last_save: " + String(letzterDatensatz) + " (" + String(epochTime) + ")");
+#endif
         return (unsigned long)epochTime;
       }
     }
   }
 
-  #if EXT_DEBUG == true
-    Serial_Debugging_println("get_last_save: 0");
-  #endif
+#if EXT_DEBUG == true
+  Serial_Debugging_println("get_last_save: 0");
+#endif
   return 0;
 }
 
@@ -687,11 +706,11 @@ bool chronik_update_all() {
       }
     } // wurde die chronik_update_all schon einmal ausgeführt?
 
-    #if EXT_DEBUG == true
-      Serial_Debugging_println("last_save: " + String(last_save));
-      Serial_Debugging_println("last_save + chronik_interval: " + String(last_save + chronik_interval));
-      Serial_Debugging_println("rtc.getEpoch: " + String(rtc.getEpoch()));
-    #endif
+#if EXT_DEBUG == true
+    Serial_Debugging_println("last_save: " + String(last_save));
+    Serial_Debugging_println("last_save + chronik_interval: " + String(last_save + chronik_interval));
+    Serial_Debugging_println("rtc.getEpoch: " + String(rtc.getEpoch()));
+#endif
 
     if (HTML_processor_is_working == false) // Überschneidungen mit dem Server zu verhindern
     {
